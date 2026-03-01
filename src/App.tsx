@@ -1,9 +1,21 @@
-// composant racine de l'application axiome
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AppShell } from "@/components/layout/AppShell";
+import Overview from "@/pages/Overview";
+import Transactions from "@/pages/Transactions";
+import AiInsights from "@/pages/AiInsights";
+
+// composant racine avec routing et layout principal
 function App() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <h1 className="p-8 text-2xl font-light tracking-wider">axiome</h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<AppShell />}>
+          <Route path="/" element={<Overview />} />
+          <Route path="/transactions" element={<Transactions />} />
+          <Route path="/insights" element={<AiInsights />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
