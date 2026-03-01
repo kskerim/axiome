@@ -58,12 +58,12 @@ function CustomTooltip({
 // graphique area chart de l'evolution du solde sur 12 mois
 export function SoldeChart({ donnees }: SoldeChartProps) {
   return (
-    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-6">
-      <h2 className="mb-6 text-sm font-medium tracking-widest text-white/30 uppercase">
+    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 sm:p-6">
+      <h2 className="mb-5 text-base font-medium tracking-widest text-white/40 uppercase sm:mb-6">
         evolution du solde
       </h2>
 
-      <div className="h-72 w-full lg:h-80">
+      <div className="h-64 w-full sm:h-80 lg:h-96">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={donnees}
@@ -90,14 +90,14 @@ export function SoldeChart({ donnees }: SoldeChartProps) {
               dataKey="mois"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "rgba(255,255,255,0.25)", fontSize: 11 }}
+              tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 12 }}
               dy={10}
             />
 
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "rgba(255,255,255,0.2)", fontSize: 11 }}
+              tick={{ fill: "rgba(255,255,255,0.25)", fontSize: 12 }}
               tickFormatter={(v: number) => `${(v / 1000).toFixed(0)}k`}
             />
 

@@ -29,13 +29,13 @@ function Transactions() {
   const setFiltreCategorie = useAxiomeStore((s) => s.setFiltreCategorie);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* titre */}
       <div>
-        <h1 className="text-xl font-semibold tracking-tight text-white/90 lg:text-2xl">
+        <h1 className="text-2xl font-semibold tracking-tight text-white/90 lg:text-3xl">
           transactions
         </h1>
-        <p className="mt-1 text-sm text-white/30">
+        <p className="mt-1 text-base text-white/35">
           historique complet de vos operations
         </p>
       </div>
@@ -47,10 +47,10 @@ function Transactions() {
             key={cat}
             onClick={() => setFiltreCategorie(cat)}
             className={cn(
-              "rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-200",
+              "rounded-lg px-3.5 py-2 text-sm font-medium transition-all duration-200",
               filtreCategorie === cat
                 ? "bg-white/10 text-white"
-                : "text-white/30 hover:bg-white/[0.04] hover:text-white/60"
+                : "text-white/35 hover:bg-white/[0.04] hover:text-white/60"
             )}
           >
             {cat}

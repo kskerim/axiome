@@ -13,19 +13,19 @@ function Overview() {
   const resteAVivre = calculerResteAVivre(transactions);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* titre de page */}
       <div>
-        <h1 className="text-xl font-semibold tracking-tight text-white/90 lg:text-2xl">
+        <h1 className="text-2xl font-semibold tracking-tight text-white/90 lg:text-3xl">
           overview
         </h1>
-        <p className="mt-1 text-sm text-white/30">
+        <p className="mt-1 text-base text-white/35">
           synthese de vos finances personnelles
         </p>
       </div>
 
       {/* kpi cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
         <KpiCard
           label="solde"
           montant={kpi.solde}
@@ -45,7 +45,7 @@ function Overview() {
       </div>
 
       {/* graphique + reste a vivre + dernieres transactions */}
-      <div className="grid gap-6 lg:grid-cols-5">
+      <div className="grid gap-6 lg:grid-cols-5 lg:gap-8">
         <div className="lg:col-span-3">
           <SoldeChart donnees={evolution} />
         </div>

@@ -41,7 +41,7 @@ export function Sidebar({ ouvert, onFermer }: SidebarProps) {
       >
         {/* logo / titre */}
         <div className="flex h-16 items-center justify-between px-6">
-          <h1 className="text-lg font-semibold tracking-[0.25em] text-white/90 uppercase">
+          <h1 className="text-xl font-semibold tracking-[0.25em] text-white/90 uppercase">
             axiome
           </h1>
           <button
@@ -64,14 +64,14 @@ export function Sidebar({ ouvert, onFermer }: SidebarProps) {
               onClick={onFermer}
               className={({ isActive }) =>
                 cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                  "flex items-center gap-3 rounded-lg px-3 py-3 text-[15px] font-medium transition-all duration-200",
                   isActive
                     ? "bg-white/[0.06] text-white"
                     : "text-white/40 hover:bg-white/[0.03] hover:text-white/70"
                 )
               }
             >
-              <lien.icon size={18} strokeWidth={1.5} />
+              <lien.icon size={20} strokeWidth={1.5} />
               <span className="tracking-wide">{lien.label}</span>
             </NavLink>
           ))}

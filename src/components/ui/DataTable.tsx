@@ -76,7 +76,7 @@ export function DataTable<TData>({
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="px-4 py-3 text-left text-[11px] font-medium tracking-widest text-white/30 uppercase"
+                      className="px-3 py-3 text-left text-xs font-medium tracking-widest text-white/35 uppercase sm:px-5 sm:py-4 sm:text-sm"
                     >
                       {header.isPlaceholder ? null : (
                         <button
@@ -110,7 +110,7 @@ export function DataTable<TData>({
                     className="border-b border-white/[0.03] transition-colors hover:bg-white/[0.02]"
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className="px-4 py-3">
+                      <td key={cell.id} className="px-3 py-3 sm:px-5 sm:py-4">
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
@@ -123,7 +123,7 @@ export function DataTable<TData>({
                 <tr>
                   <td
                     colSpan={colonnes.length}
-                    className="px-4 py-12 text-center text-sm text-white/30"
+                    className="px-4 py-12 text-center text-base text-white/30"
                   >
                     aucune transaction trouvee
                   </td>
@@ -136,12 +136,12 @@ export function DataTable<TData>({
 
       {/* pagination */}
       <div className="flex items-center justify-between px-1">
-        <p className="text-xs text-white/30">
+        <p className="text-sm text-white/35">
           {table.getFilteredRowModel().rows.length} transaction
           {table.getFilteredRowModel().rows.length > 1 ? "s" : ""}
         </p>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           <BoutonPagination
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
@@ -155,7 +155,7 @@ export function DataTable<TData>({
             <ChevronLeft size={14} />
           </BoutonPagination>
 
-          <span className="px-3 text-xs text-white/50">
+          <span className="px-3 text-sm text-white/50">
             {table.getState().pagination.pageIndex + 1} / {table.getPageCount()}
           </span>
 
@@ -192,7 +192,7 @@ function BoutonPagination({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        "rounded-md p-1.5 transition-colors",
+        "rounded-md p-2 transition-colors",
         disabled
           ? "text-white/10 cursor-not-allowed"
           : "text-white/40 hover:bg-white/[0.06] hover:text-white/70"

@@ -9,7 +9,7 @@ interface TopbarProps {
 // barre superieure avec bouton menu mobile, bouton ajout et indicateur
 export function Topbar({ onOuvrirMenu }: TopbarProps) {
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-white/[0.06] bg-[#09090b]/80 px-6 backdrop-blur-xl">
+    <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b border-white/[0.06] bg-[#09090b]/80 px-4 backdrop-blur-xl sm:h-16 sm:px-6">
       {/* bouton menu mobile */}
       <button
         onClick={onOuvrirMenu}
@@ -27,7 +27,7 @@ export function Topbar({ onOuvrirMenu }: TopbarProps) {
       {/* indicateur de statut */}
       <div className="flex items-center gap-2">
         <div className="h-2 w-2 rounded-full bg-emerald-500/80" />
-        <span className="text-xs font-light tracking-wide text-white/30">
+        <span className="text-sm font-light tracking-wide text-white/30">
           live
         </span>
       </div>

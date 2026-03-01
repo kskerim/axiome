@@ -17,8 +17,8 @@ export function DernieresTransactions({
   const recentes = transactions.slice(0, limite);
 
   return (
-    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-6">
-      <h2 className="mb-6 text-sm font-medium tracking-widest text-white/30 uppercase">
+    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 sm:p-6">
+      <h2 className="mb-5 text-base font-medium tracking-widest text-white/40 uppercase sm:mb-6">
         dernieres transactions
       </h2>
 
@@ -26,19 +26,19 @@ export function DernieresTransactions({
         {recentes.map((tx) => (
           <div
             key={tx.id}
-            className="flex items-center gap-4 rounded-lg px-2 py-2.5 transition-colors hover:bg-white/[0.03]"
+            className="flex items-center gap-3 rounded-lg px-2 py-3 transition-colors hover:bg-white/[0.03] sm:gap-4"
           >
             <MerchantAvatar
               marchand={tx.marchand}
               categorie={tx.categorie}
-              taille={36}
+              taille={40}
             />
 
             <div className="flex-1 min-w-0">
-              <p className="truncate text-sm font-medium text-white/80">
+              <p className="truncate text-base font-medium text-white/80">
                 {tx.marchand}
               </p>
-              <p className="text-xs text-white/30">
+              <p className="text-sm text-white/35">
                 {new Date(tx.date).toLocaleDateString("fr-FR", {
                   day: "numeric",
                   month: "short",
@@ -50,7 +50,7 @@ export function DernieresTransactions({
 
             <p
               className={cn(
-                "text-sm font-medium tabular-nums",
+                "text-base font-medium tabular-nums",
                 tx.montant >= 0 ? "text-emerald-400" : "text-white/70"
               )}
             >

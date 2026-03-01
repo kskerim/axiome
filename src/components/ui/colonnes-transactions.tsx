@@ -19,10 +19,10 @@ export const colonnesTransactions: ColumnDef<Transaction, unknown>[] = [
           <MerchantAvatar
             marchand={tx.marchand}
             categorie={tx.categorie}
-            taille={32}
+            taille={38}
           />
           <div>
-            <p className="text-sm font-medium text-white/80">{tx.marchand}</p>
+            <p className="text-base font-medium text-white/80">{tx.marchand}</p>
           </div>
         </div>
       );
@@ -34,7 +34,7 @@ export const colonnesTransactions: ColumnDef<Transaction, unknown>[] = [
     cell: ({ row }) => {
       const date = new Date(row.original.date);
       return (
-        <span className="text-sm text-white/50">
+        <span className="text-base text-white/55">
           {date.toLocaleDateString("fr-FR", {
             day: "numeric",
             month: "short",
@@ -50,7 +50,7 @@ export const colonnesTransactions: ColumnDef<Transaction, unknown>[] = [
     accessorKey: "categorie",
     header: "categorie",
     cell: ({ row }) => (
-      <span className="rounded-md bg-white/[0.05] px-2.5 py-1 text-xs font-medium text-white/50">
+      <span className="rounded-md bg-white/[0.05] px-2.5 py-1 text-sm font-medium text-white/55">
         {row.original.categorie}
       </span>
     ),
@@ -67,7 +67,7 @@ export const colonnesTransactions: ColumnDef<Transaction, unknown>[] = [
       return (
         <span
           className={cn(
-            "text-sm font-medium tabular-nums",
+            "text-base font-medium tabular-nums",
             montant >= 0 ? "text-emerald-400" : "text-white/70"
           )}
         >
@@ -83,11 +83,11 @@ export const colonnesTransactions: ColumnDef<Transaction, unknown>[] = [
     cell: ({ row }) =>
       row.original.isRecurring ? (
         <div className="flex items-center gap-1.5 text-indigo-400/70">
-          <Repeat size={13} />
-          <span className="text-xs">recurrent</span>
+          <Repeat size={15} />
+          <span className="text-sm">recurrent</span>
         </div>
       ) : (
-        <span className="text-xs text-white/25">ponctuel</span>
+        <span className="text-sm text-white/30">ponctuel</span>
       ),
     enableSorting: false,
   },
@@ -111,10 +111,10 @@ function BoutonSuppression({ transaction }: { transaction: Transaction }) {
   return (
     <button
       onClick={handleClick}
-      className="rounded-md p-1.5 text-white/20 transition-colors hover:bg-red-500/10 hover:text-red-400"
+      className="rounded-md p-2 text-white/20 transition-colors hover:bg-red-500/10 hover:text-red-400"
       title="supprimer"
     >
-      <Trash2 size={14} />
+      <Trash2 size={16} />
     </button>
   );
 }
