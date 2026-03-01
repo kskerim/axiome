@@ -1,14 +1,16 @@
 import { useAxiomeStore } from "@/store";
-import { calculerKpi, calculerEvolutionMensuelle } from "@/lib/calculs";
+import { calculerKpi, calculerEvolutionMensuelle, calculerResteAVivre } from "@/lib/calculs";
 import { KpiCard } from "@/components/ui/KpiCard";
 import { SoldeChart } from "@/components/ui/SoldeChart";
 import { DernieresTransactions } from "@/components/ui/DernieresTransactions";
+import { ResteAVivre } from "@/components/ui/ResteAVivre";
 
-// page principale avec kpi, graphique et dernieres transactions
+// page principale avec kpi, graphique, reste a vivre et dernieres transactions
 function Overview() {
   const transactions = useAxiomeStore((s) => s.transactions);
   const kpi = calculerKpi(transactions);
   const evolution = calculerEvolutionMensuelle(transactions);
+  const resteAVivre = calculerResteAVivre(transactions);
 
   return (
     <div className="space-y-8">
@@ -42,12 +44,13 @@ function Overview() {
         />
       </div>
 
-      {/* graphique + dernieres transactions */}
+      {/* graphique + reste a vivre + dernieres transactions */}
       <div className="grid gap-6 lg:grid-cols-5">
         <div className="lg:col-span-3">
           <SoldeChart donnees={evolution} />
         </div>
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 space-y-6">
+          <ResteAVivre donnees={resteAVivre} />
           <DernieresTransactions transactions={transactions} />
         </div>
       </div>

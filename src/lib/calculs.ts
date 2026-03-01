@@ -113,6 +113,88 @@ export function calculerEvolutionMensuelle(
   return points;
 }
 
+// categories considerees comme charges fixes
+const CATEGORIES_FIXES = ["logement", "abonnements", "epargne"] as const;
+
+// categories considerees comme revenus
+const CATEGORIES_REVENUS = ["revenus"] as const;
+
+// donnees du reste a vivre
+export interface ResteAVivreData {
+  revenus: number;
+  chargesFixes: number;
+  depensesVariables: number;
+  resteAVivre: number;
+  pourcentageConsomme: number;
+  budgetDisponible: number;
+  detailFixes: { categorie: string; montant: number }[];
+}
+
+// calcule le reste a vivre du mois en cours
+export function calculerResteAVivre(transactions: Transaction[]): ResteAVivreData {
+  const maintenant = new Date();
+  const moisActuel = maintenant.getMonth();
+  const anneeActuelle = maintenant.getFullYear();
+
+  // transactions du mois en cours
+  const txMois = transactions.filter((t) => {
+    const d = new Date(t.date);
+    return d.getMonth() === moisActuel && d.getFullYear() === anneeActuelle;
+  });
+
+  // revenus du mois
+  const revenus = txMois
+    .filter((t) => (CATEGORIES_REVENUS as readonly string[]).includes(t.categorie))
+    .reduce((acc, t) => acc + Math.abs(t.montant), 0);
+
+  // charges fixes du mois (logement, abonnements, epargne)
+  const txFixes = txMois.filter(
+    (t) => (CATEGORIES_FIXES as readonly string[]).includes(t.categorie) && t.montant < 0
+  );
+  const chargesFixes = Math.abs(txFixes.reduce((acc, t) => acc + t.montant, 0));
+
+  // detail par categorie fixe
+  const detailFixes = (CATEGORIES_FIXES as readonly string[]).map((cat) => ({
+    categorie: cat,
+    montant: Math.abs(
+      txFixes.filter((t) => t.categorie === cat).reduce((acc, t) => acc + t.montant, 0)
+    ),
+  })).filter((d) => d.montant > 0);
+
+  // depenses variables = toutes les depenses hors charges fixes
+  const depensesVariables = Math.abs(
+    txMois
+      .filter(
+        (t) =>
+          t.montant < 0 &&
+          !(CATEGORIES_FIXES as readonly string[]).includes(t.categorie)
+      )
+      .reduce((acc, t) => acc + t.montant, 0)
+  );
+
+  // budget disponible = revenus - charges fixes
+  const budgetDisponible = Math.max(0, revenus - chargesFixes);
+
+  // reste a vivre = budget disponible - depenses variables
+  const resteAVivre = budgetDisponible - depensesVariables;
+
+  // pourcentage du budget disponible deja consomme
+  const pourcentageConsomme =
+    budgetDisponible === 0
+      ? 100
+      : Math.min(100, Math.round((depensesVariables / budgetDisponible) * 100));
+
+  return {
+    revenus,
+    chargesFixes,
+    depensesVariables,
+    resteAVivre,
+    pourcentageConsomme,
+    budgetDisponible,
+    detailFixes,
+  };
+}
+
 // formate un montant en euros
 export function formaterMontant(montant: number): string {
   return new Intl.NumberFormat("fr-FR", {
