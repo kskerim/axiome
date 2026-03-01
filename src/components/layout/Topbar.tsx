@@ -1,11 +1,12 @@
 import { Menu } from "lucide-react";
+import { ModalAjoutTransaction } from "@/components/ui/ModalAjoutTransaction";
 
 // props de la topbar
 interface TopbarProps {
   onOuvrirMenu: () => void;
 }
 
-// barre superieure avec bouton menu mobile et titre de page
+// barre superieure avec bouton menu mobile, bouton ajout et indicateur
 export function Topbar({ onOuvrirMenu }: TopbarProps) {
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-white/[0.06] bg-[#09090b]/80 px-6 backdrop-blur-xl">
@@ -19,6 +20,9 @@ export function Topbar({ onOuvrirMenu }: TopbarProps) {
 
       {/* spacer */}
       <div className="flex-1" />
+
+      {/* bouton d'ajout de transaction */}
+      <ModalAjoutTransaction />
 
       {/* indicateur de statut */}
       <div className="flex items-center gap-2">
