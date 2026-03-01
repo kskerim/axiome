@@ -3,7 +3,9 @@ import type { Transaction } from "@/types";
 import { MerchantAvatar } from "@/components/ui/MerchantAvatar";
 import { formaterMontant } from "@/lib/calculs";
 import { cn } from "@/lib/utils";
-import { Repeat } from "lucide-react";
+import { Repeat, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import { useAxiomeStore } from "@/store";
 
 // definition des colonnes pour la table des transactions
 export const colonnesTransactions: ColumnDef<Transaction, unknown>[] = [
@@ -89,4 +91,30 @@ export const colonnesTransactions: ColumnDef<Transaction, unknown>[] = [
       ),
     enableSorting: false,
   },
+  {
+    id: "actions",
+    header: "",
+    cell: ({ row }) => <BoutonSuppression transaction={row.original} />,
+    enableSorting: false,
+  },
 ];
+
+// bouton de suppression avec toast de confirmation
+function BoutonSuppression({ transaction }: { transaction: Transaction }) {
+  const supprimer = useAxiomeStore((s) => s.supprimerTransaction);
+
+  const handleClick = () => {
+    supprimer(transaction.id);
+    toast.success(`transaction "${transaction.marchand}" supprimee`);
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      className="rounded-md p-1.5 text-white/20 transition-colors hover:bg-red-500/10 hover:text-red-400"
+      title="supprimer"
+    >
+      <Trash2 size={14} />
+    </button>
+  );
+}

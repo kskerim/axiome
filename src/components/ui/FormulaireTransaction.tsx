@@ -2,6 +2,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { faker } from "@faker-js/faker";
+import { toast } from "sonner";
 import type { CategorieTransaction } from "@/types";
 import { useAxiomeStore } from "@/store";
 import { Input } from "@/components/ui/Input";
@@ -99,6 +100,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
       isRecurring: data.type === "depense_recurrente",
     });
 
+    toast.success(`transaction "${data.marchand}" ajoutee`);
     reset();
     onSucces?.();
   };
