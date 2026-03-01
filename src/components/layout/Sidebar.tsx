@@ -9,9 +9,9 @@ import { cn } from "@/lib/utils";
 
 // liens de navigation principaux
 const LIENS_NAV = [
-  { to: "/", label: "overview", icon: LayoutDashboard },
-  { to: "/transactions", label: "transactions", icon: ArrowLeftRight },
-  { to: "/insights", label: "ai insights", icon: Brain },
+  { to: "/", label: "Tableau de bord", icon: LayoutDashboard },
+  { to: "/transactions", label: "Transactions", icon: ArrowLeftRight },
+  { to: "/insights", label: "Analyses IA", icon: Brain },
 ] as const;
 
 // props de la sidebar

@@ -41,7 +41,7 @@ export function ResteAVivre({ donnees }: ResteAVivreProps) {
       <div className="mb-5 flex items-center gap-2.5 sm:mb-6">
         <Wallet size={20} className="text-white/40" />
         <h2 className="text-base font-medium tracking-widest text-white/40 uppercase">
-          reste a vivre
+          Reste \u00e0 vivre
         </h2>
       </div>
 
@@ -56,7 +56,7 @@ export function ResteAVivre({ donnees }: ResteAVivreProps) {
       {/* barre de progression */}
       <div className="mt-5">
         <div className="mb-2 flex items-center justify-between text-sm">
-          <span className="text-white/45">consomme</span>
+          <span className="text-white/45">Consomm\u00e9</span>
           <span className="font-medium text-white/65">
             {pourcentageConsomme}%
           </span>
@@ -77,7 +77,7 @@ export function ResteAVivre({ donnees }: ResteAVivreProps) {
       {detailFixes.length > 0 && (
         <div className="mt-6 space-y-3">
           <p className="text-sm font-medium text-white/25 uppercase tracking-wider">
-            charges fixes
+            Charges fixes
           </p>
           {detailFixes.map((item) => (
             <div

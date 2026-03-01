@@ -60,7 +60,7 @@ export function SoldeChart({ donnees }: SoldeChartProps) {
   return (
     <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 sm:p-6">
       <h2 className="mb-5 text-base font-medium tracking-widest text-white/40 uppercase sm:mb-6">
-        evolution du solde
+        \u00c9volution du solde
       </h2>
 
       <div className="h-64 w-full sm:h-80 lg:h-96">

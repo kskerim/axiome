@@ -39,15 +39,30 @@ const DOMAINES_MARCHANDS: Record<string, string> = {
   lidl: "lidl.fr",
   monoprix: "monoprix.fr",
   picard: "picard.fr",
+  "grand frais": "grandfrais.com",
+  biocoop: "biocoop.fr",
+  naturalia: "naturalia.fr",
+  "boulangerie paul": "paul.fr",
 
   // transport
   uber: "uber.com",
   bolt: "bolt.eu",
   ratp: "ratp.fr",
   sncf: "sncf.fr",
+  navigo: "iledefrance-mobilites.fr",
+  lime: "li.me",
+  tier: "tier.app",
+
+  // automobile / essence
   totalenergies: "totalenergies.fr",
   shell: "shell.fr",
-  navigo: "iledefrance-mobilites.fr",
+  bp: "bp.com",
+  esso: "esso.fr",
+  avia: "avia.fr",
+  norauto: "norauto.fr",
+  "feu vert": "feuvert.fr",
+  speedy: "speedy.fr",
+  midas: "midas.fr",
 
   // restauration
   "uber eats": "ubereats.com",
@@ -57,6 +72,14 @@ const DOMAINES_MARCHANDS: Record<string, string> = {
   "sushi shop": "sushishop.fr",
   "domino's": "dominos.fr",
   "le bistrot": "",
+  "five guys": "fiveguys.fr",
+  flunch: "flunch.fr",
+  "buffalo grill": "buffalo-grill.fr",
+
+  // bar / cafe
+  starbucks: "starbucks.fr",
+  "columbus cafe": "columbuscafe.com",
+  paul: "paul.fr",
 
   // logement / energie
   "loyer mensuel": "",
@@ -71,6 +94,31 @@ const DOMAINES_MARCHANDS: Record<string, string> = {
   "h&m": "hm.com",
   ikea: "ikea.com",
   "apple store": "apple.com",
+  action: "action.com",
+  primark: "primark.com",
+
+  // beaute
+  sephora: "sephora.fr",
+  "yves rocher": "yves-rocher.fr",
+  nocibe: "nocibe.fr",
+
+  // animaux
+  jardiland: "jardiland.com",
+  truffaut: "truffaut.com",
+  animalis: "animalis.com",
+  zooplus: "zooplus.fr",
+
+  // maison / bricolage
+  "leroy merlin": "leroymerlin.fr",
+  castorama: "castorama.fr",
+  boulanger: "boulanger.com",
+  darty: "darty.com",
+  but: "but.fr",
+  conforama: "conforama.fr",
+  "maisons du monde": "maisonsdumonde.com",
+
+  // cadeaux
+  "nature et decouvertes": "natureetdecouvertes.com",
 
   // sante / assurances
   "pharmacie lafayette": "pharmacielafayette.com",
@@ -102,12 +150,16 @@ const DOMAINES_MARCHANDS: Record<string, string> = {
   "air france": "airfrance.fr",
   flixbus: "flixbus.fr",
   blablacar: "blablacar.fr",
+  ouigo: "ouigo.com",
+  easyjet: "easyjet.com",
 
   // revenus
   "salaire entreprise": "",
   freelance: "",
   "remboursement secu": "ameli.fr",
   "virement recu": "",
+  caf: "caf.fr",
+  "prime employeur": "",
 
   // epargne
   "livret a": "",
@@ -120,6 +172,7 @@ const DOMAINES_MARCHANDS: Record<string, string> = {
   virement: "",
   paypal: "paypal.com",
   lydia: "lydia-app.com",
+  "la poste": "laposte.fr",
 
   // presse
   "le monde": "lemonde.fr",
@@ -160,12 +213,18 @@ export function getInitiales(marchand: string): string {
 const COULEURS_CATEGORIES: Record<string, string> = {
   alimentation: "bg-emerald-900/50 text-emerald-400",
   transport: "bg-blue-900/50 text-blue-400",
+  automobile: "bg-slate-800/50 text-slate-400",
   logement: "bg-amber-900/50 text-amber-400",
   loisirs: "bg-purple-900/50 text-purple-400",
   sante: "bg-red-900/50 text-red-400",
   restauration: "bg-orange-900/50 text-orange-400",
+  bar_cafe: "bg-yellow-900/50 text-yellow-400",
   abonnements: "bg-indigo-900/50 text-indigo-400",
   shopping: "bg-pink-900/50 text-pink-400",
+  beaute: "bg-fuchsia-900/50 text-fuchsia-400",
+  animaux: "bg-lime-900/50 text-lime-400",
+  maison: "bg-stone-800/50 text-stone-400",
+  cadeaux: "bg-rose-900/50 text-rose-400",
   education: "bg-cyan-900/50 text-cyan-400",
   voyage: "bg-teal-900/50 text-teal-400",
   revenus: "bg-green-900/50 text-green-400",

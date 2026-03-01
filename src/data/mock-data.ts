@@ -17,30 +17,47 @@ const MARCHANDS_PAR_CATEGORIE: Record<
   { noms: string[]; min: number; max: number }
 > = {
   alimentation: {
-    noms: ["carrefour", "leclerc", "auchan", "lidl", "monoprix", "picard", "franprix", "intermarche"],
-    min: 8,
+    noms: [
+      "carrefour", "leclerc", "auchan", "lidl", "monoprix", "picard",
+      "franprix", "intermarche", "grand frais", "biocoop", "naturalia",
+      "boulangerie paul", "marche couvert", "primeur du coin",
+    ],
+    min: 3,
     max: 180,
   },
   transport: {
-    noms: ["uber", "bolt", "ratp", "sncf", "totalenergies", "shell", "navigo", "blablacar"],
-    min: 5,
+    noms: ["uber", "bolt", "ratp", "sncf", "navigo", "blablacar", "lime", "tier", "indigo parking"],
+    min: 1.5,
+    max: 120,
+  },
+  automobile: {
+    noms: [
+      "totalenergies", "shell", "bp", "esso", "avia",
+      "norauto", "feu vert", "speedy", "midas",
+      "controle technique", "peage autoroute", "lavage auto",
+    ],
+    min: 15,
     max: 120,
   },
   logement: {
-    noms: ["loyer mensuel", "edf", "engie", "veolia", "free box", "orange fibre", "sfr box"],
+    noms: ["loyer mensuel", "edf", "engie", "veolia", "free box", "orange fibre", "sfr box", "taxe fonciere"],
     min: 30,
     max: 950,
   },
   loisirs: {
-    noms: ["fnac", "cultura", "ugc", "pathe", "decathlon", "canal+"],
-    min: 10,
+    noms: [
+      "fnac", "cultura", "ugc", "pathe", "decathlon", "canal+",
+      "bowling", "musee du louvre", "parc asterix", "escape game",
+      "cinema mk2", "laser game",
+    ],
+    min: 8,
     max: 150,
   },
   sante: {
     noms: [
       "pharmacie lafayette", "doctolib", "optical center",
       "allianz", "axa", "maif", "macif", "matmut", "groupama",
-      "alan", "harmonie mutuelle",
+      "alan", "harmonie mutuelle", "dentiste", "kine",
     ],
     min: 10,
     max: 200,
@@ -49,9 +66,19 @@ const MARCHANDS_PAR_CATEGORIE: Record<
     noms: [
       "uber eats", "deliveroo", "just eat",
       "mcdonald's", "sushi shop", "domino's", "le bistrot",
+      "kebab du coin", "brasserie du marche", "la pizzeria",
+      "five guys", "flunch", "buffalo grill",
     ],
-    min: 8,
+    min: 5,
     max: 85,
+  },
+  bar_cafe: {
+    noms: [
+      "starbucks", "columbus cafe", "cafe de flore", "paul",
+      "bar le comptoir", "pub o'malley", "le zinc",
+    ],
+    min: 3,
+    max: 35,
   },
   abonnements: {
     noms: [
@@ -66,24 +93,50 @@ const MARCHANDS_PAR_CATEGORIE: Record<
     max: 55,
   },
   shopping: {
-    noms: ["amazon", "zalando", "zara", "h&m", "ikea", "apple store"],
-    min: 15,
+    noms: ["amazon", "zalando", "zara", "h&m", "ikea", "apple store", "action", "gifi", "primark"],
+    min: 10,
     max: 500,
   },
+  beaute: {
+    noms: [
+      "sephora", "yves rocher", "nocibe", "coiffeur",
+      "institut de beaute", "barber shop", "manucure",
+    ],
+    min: 10,
+    max: 120,
+  },
+  animaux: {
+    noms: ["veterinaire", "jardiland", "truffaut", "animalis", "zooplus"],
+    min: 10,
+    max: 200,
+  },
+  maison: {
+    noms: [
+      "leroy merlin", "castorama", "boulanger", "darty",
+      "bricomarche", "but", "conforama", "maisons du monde",
+    ],
+    min: 15,
+    max: 400,
+  },
+  cadeaux: {
+    noms: ["fleuriste", "bijouterie", "jouets club", "nature et decouvertes", "la chaise longue"],
+    min: 15,
+    max: 200,
+  },
   education: {
-    noms: ["udemy", "coursera", "openclassrooms", "librairie"],
+    noms: ["udemy", "coursera", "openclassrooms", "librairie", "papeterie"],
     min: 10,
     max: 100,
   },
   voyage: {
-    noms: ["booking.com", "airbnb", "air france", "flixbus", "blablacar"],
+    noms: ["booking.com", "airbnb", "air france", "flixbus", "blablacar", "ouigo", "easyjet"],
     min: 30,
     max: 600,
   },
   revenus: {
     noms: [
       "salaire entreprise", "freelance",
-      "remboursement secu", "virement recu",
+      "remboursement secu", "virement recu", "caf", "prime employeur",
     ],
     min: 500,
     max: 3200,
@@ -94,7 +147,7 @@ const MARCHANDS_PAR_CATEGORIE: Record<
     max: 500,
   },
   divers: {
-    noms: ["retrait dab", "virement", "paypal", "lydia"],
+    noms: ["retrait dab", "virement", "paypal", "lydia", "tabac presse", "pressing", "serrurier", "la poste"],
     min: 5,
     max: 200,
   },
@@ -102,14 +155,20 @@ const MARCHANDS_PAR_CATEGORIE: Record<
 
 // poids de probabilite pour chaque categorie (influence la frequence)
 const POIDS_CATEGORIES: Record<CategorieTransaction, number> = {
-  alimentation: 25,
-  transport: 12,
+  alimentation: 22,
+  transport: 8,
+  automobile: 8,
   logement: 5,
-  loisirs: 8,
+  loisirs: 6,
   sante: 4,
-  restauration: 18,
-  abonnements: 10,
-  shopping: 6,
+  restauration: 14,
+  bar_cafe: 7,
+  abonnements: 8,
+  shopping: 5,
+  beaute: 3,
+  animaux: 2,
+  maison: 3,
+  cadeaux: 2,
   education: 2,
   voyage: 2,
   revenus: 3,

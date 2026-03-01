@@ -105,7 +105,7 @@ function BoutonSuppression({ transaction }: { transaction: Transaction }) {
 
   const handleClick = () => {
     supprimer(transaction.id);
-    toast.success(`transaction "${transaction.marchand}" supprimee`);
+    toast.success(`Transaction "${transaction.marchand}" supprim\u00e9e`);
   };
 
   return (

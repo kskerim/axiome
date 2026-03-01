@@ -9,12 +9,18 @@ const CATEGORIES: Array<CategorieTransaction | "toutes"> = [
   "toutes",
   "alimentation",
   "transport",
+  "automobile",
   "logement",
   "loisirs",
   "sante",
   "restauration",
+  "bar_cafe",
   "abonnements",
   "shopping",
+  "beaute",
+  "animaux",
+  "maison",
+  "cadeaux",
   "education",
   "voyage",
   "revenus",
@@ -33,10 +39,10 @@ function Transactions() {
       {/* titre */}
       <div>
         <h1 className="text-2xl font-semibold tracking-tight text-white/90 lg:text-3xl">
-          transactions
+          Transactions
         </h1>
         <p className="mt-1 text-base text-white/35">
-          historique complet de vos operations
+          Historique complet de vos opérations
         </p>
       </div>
 

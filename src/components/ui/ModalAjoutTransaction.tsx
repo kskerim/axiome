@@ -16,9 +16,12 @@ export function ModalAjoutTransaction() {
 
   return (
     <Dialog open={ouvert} onOpenChange={setOuvert}>
-      <Button variant="secondary" size="sm" onClick={() => setOuvert(true)}>
-        <Plus size={16} />
-        ajouter
+      <Button
+        onClick={() => setOuvert(true)}
+        className="gap-2 bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-600/20 transition-all hover:bg-violet-500 hover:shadow-violet-500/30 sm:px-6 sm:text-base"
+      >
+        <Plus size={18} strokeWidth={2.5} />
+        Ajouter
       </Button>
 
       <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
@@ -28,9 +31,9 @@ export function ModalAjoutTransaction() {
               <Receipt size={20} className="text-white/50" />
             </div>
             <div>
-              <DialogTitle className="text-lg">nouvelle transaction</DialogTitle>
+              <DialogTitle className="text-lg">Nouvelle transaction</DialogTitle>
               <DialogDescription className="text-sm">
-                ajouter un revenu, une depense ou un abonnement mensuel
+                Ajouter un revenu, une dépense ou un abonnement mensuel
               </DialogDescription>
             </div>
           </div>

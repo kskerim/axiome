@@ -20,6 +20,12 @@ import {
   PiggyBank,
   CircleDot,
   Euro,
+  Fuel,
+  Scissors,
+  Coffee,
+  PawPrint,
+  Wrench,
+  Gift,
 } from "lucide-react";
 import type { CategorieTransaction } from "@/types";
 import { useAxiomeStore } from "@/store";
@@ -32,24 +38,24 @@ import { cn } from "@/lib/utils";
 const TYPES_TRANSACTION = [
   {
     value: "depense_ponctuelle" as const,
-    label: "depense",
-    description: "achat unique",
+    label: "Dépense",
+    description: "Achat unique",
     icon: ArrowDownCircle,
     couleur: "text-red-400 bg-red-500/10 border-red-500/20",
     couleurActive: "text-red-400 bg-red-500/15 border-red-500/40 ring-1 ring-red-500/20",
   },
   {
     value: "depense_recurrente" as const,
-    label: "abonnement",
-    description: "paiement mensuel",
+    label: "Abonnement",
+    description: "Paiement mensuel",
     icon: Repeat,
     couleur: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
     couleurActive: "text-indigo-400 bg-indigo-500/15 border-indigo-500/40 ring-1 ring-indigo-500/20",
   },
   {
     value: "revenu" as const,
-    label: "revenu",
-    description: "salaire, virement...",
+    label: "Revenu",
+    description: "Salaire, virement...",
     icon: ArrowUpCircle,
     couleur: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
     couleurActive: "text-emerald-400 bg-emerald-500/15 border-emerald-500/40 ring-1 ring-emerald-500/20",
@@ -63,19 +69,25 @@ const CATEGORIES_CONFIG: {
   icon: React.ComponentType<{ size?: number }>;
   types: string[];
 }[] = [
-  { value: "alimentation", label: "alimentation", icon: ShoppingBag, types: ["depense_ponctuelle", "depense_recurrente"] },
-  { value: "transport", label: "transport", icon: Car, types: ["depense_ponctuelle", "depense_recurrente"] },
-  { value: "logement", label: "logement", icon: Home, types: ["depense_ponctuelle", "depense_recurrente"] },
-  { value: "loisirs", label: "loisirs", icon: Gamepad2, types: ["depense_ponctuelle", "depense_recurrente"] },
-  { value: "sante", label: "sante", icon: HeartPulse, types: ["depense_ponctuelle", "depense_recurrente"] },
-  { value: "restauration", label: "restauration", icon: UtensilsCrossed, types: ["depense_ponctuelle", "depense_recurrente"] },
-  { value: "abonnements", label: "abonnements", icon: CreditCard, types: ["depense_recurrente"] },
-  { value: "shopping", label: "shopping", icon: ShoppingBag, types: ["depense_ponctuelle"] },
-  { value: "education", label: "education", icon: GraduationCap, types: ["depense_ponctuelle", "depense_recurrente"] },
-  { value: "voyage", label: "voyage", icon: Plane, types: ["depense_ponctuelle"] },
-  { value: "divers", label: "divers", icon: CircleDot, types: ["depense_ponctuelle", "depense_recurrente"] },
-  { value: "revenus", label: "revenus", icon: Banknote, types: ["revenu"] },
-  { value: "epargne", label: "epargne", icon: PiggyBank, types: ["revenu"] },
+  { value: "alimentation", label: "Alimentation", icon: ShoppingBag, types: ["depense_ponctuelle", "depense_recurrente"] },
+  { value: "transport", label: "Transport", icon: Car, types: ["depense_ponctuelle", "depense_recurrente"] },
+  { value: "automobile", label: "Automobile", icon: Fuel, types: ["depense_ponctuelle", "depense_recurrente"] },
+  { value: "logement", label: "Logement", icon: Home, types: ["depense_ponctuelle", "depense_recurrente"] },
+  { value: "loisirs", label: "Loisirs", icon: Gamepad2, types: ["depense_ponctuelle", "depense_recurrente"] },
+  { value: "sante", label: "Santé", icon: HeartPulse, types: ["depense_ponctuelle", "depense_recurrente"] },
+  { value: "restauration", label: "Restauration", icon: UtensilsCrossed, types: ["depense_ponctuelle", "depense_recurrente"] },
+  { value: "bar_cafe", label: "Bar / Café", icon: Coffee, types: ["depense_ponctuelle"] },
+  { value: "abonnements", label: "Abonnements", icon: CreditCard, types: ["depense_recurrente"] },
+  { value: "shopping", label: "Shopping", icon: ShoppingBag, types: ["depense_ponctuelle"] },
+  { value: "beaute", label: "Beauté", icon: Scissors, types: ["depense_ponctuelle", "depense_recurrente"] },
+  { value: "animaux", label: "Animaux", icon: PawPrint, types: ["depense_ponctuelle", "depense_recurrente"] },
+  { value: "maison", label: "Maison", icon: Wrench, types: ["depense_ponctuelle"] },
+  { value: "cadeaux", label: "Cadeaux", icon: Gift, types: ["depense_ponctuelle"] },
+  { value: "education", label: "Éducation", icon: GraduationCap, types: ["depense_ponctuelle", "depense_recurrente"] },
+  { value: "voyage", label: "Voyage", icon: Plane, types: ["depense_ponctuelle"] },
+  { value: "divers", label: "Divers", icon: CircleDot, types: ["depense_ponctuelle", "depense_recurrente"] },
+  { value: "revenus", label: "Revenus", icon: Banknote, types: ["revenu"] },
+  { value: "epargne", label: "Épargne", icon: PiggyBank, types: ["revenu"] },
 ];
 
 // schema de validation zod
@@ -145,7 +157,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
 
     const emoji = estRevenu ? "+" : "-";
     toast.success(
-      `${typeLabel} "${data.marchand}" ajoutee (${emoji}${data.montant.toFixed(2)})`
+      `${typeLabel} "${data.marchand}" ajout\u00e9e (${emoji}${data.montant.toFixed(2)})`
     );
     reset();
     onSucces?.();
@@ -155,7 +167,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* selecteur de type visuel */}
       <div className="space-y-3">
-        <Label className="text-sm text-white/50">type de transaction</Label>
+        <Label className="text-sm text-white/50">Type de transaction</Label>
         <Controller
           name="type"
           control={control}
@@ -198,7 +210,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
       {/* nom du marchand / source */}
       <div className="space-y-2">
         <Label htmlFor="marchand">
-          {typeSelectionne === "revenu" ? "source du revenu" : typeSelectionne === "depense_recurrente" ? "nom de l'abonnement" : "marchand / commerce"}
+          {typeSelectionne === "revenu" ? "Source du revenu" : typeSelectionne === "depense_recurrente" ? "Nom de l'abonnement" : "Marchand / commerce"}
         </Label>
         <Input
           id="marchand"
@@ -221,7 +233,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
         {/* montant */}
         <div className="space-y-2">
           <Label htmlFor="montant">
-            montant {typeSelectionne === "depense_recurrente" && "/ mois"}
+            Montant {typeSelectionne === "depense_recurrente" && "/ mois"}
           </Label>
           <div className="relative">
             <Euro size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/25" />
@@ -242,7 +254,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
         {/* date */}
         <div className="space-y-2">
           <Label htmlFor="date">
-            {typeSelectionne === "depense_recurrente" ? "debut de l'abonnement" : "date"}
+            {typeSelectionne === "depense_recurrente" ? "D\u00e9but de l'abonnement" : "Date"}
           </Label>
           <Input id="date" type="date" {...register("date")} />
           {errors.date && (
@@ -253,7 +265,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
 
       {/* grille de categories visuelles */}
       <div className="space-y-2">
-        <Label>categorie</Label>
+        <Label>Cat\u00e9gorie</Label>
         <Controller
           name="categorie"
           control={control}
@@ -292,7 +304,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
         <div className="flex items-center gap-3 rounded-lg border border-indigo-500/10 bg-indigo-500/[0.04] p-3.5">
           <Repeat size={18} className="text-indigo-400" />
           <p className="text-sm text-indigo-300/80">
-            cet abonnement sera marque comme paiement mensuel recurrent
+            Cet abonnement sera marqu\u00e9 comme paiement mensuel r\u00e9current
           </p>
         </div>
       )}
@@ -300,10 +312,10 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
       {/* bouton de soumission */}
       <Button type="submit" className="w-full" disabled={isSubmitting}>
         {typeSelectionne === "revenu"
-          ? "ajouter ce revenu"
+          ? "Ajouter ce revenu"
           : typeSelectionne === "depense_recurrente"
-            ? "ajouter cet abonnement"
-            : "ajouter cette depense"}
+            ? "Ajouter cet abonnement"
+            : "Ajouter cette d\u00e9pense"}
       </Button>
     </form>
   );

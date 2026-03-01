@@ -24,6 +24,12 @@ export type CategorieTransaction =
   | "voyage"
   | "revenus"
   | "epargne"
+  | "automobile"
+  | "beaute"
+  | "bar_cafe"
+  | "animaux"
+  | "maison"
+  | "cadeaux"
   | "divers";
 
 // alerte generee par le moteur d'analyse

@@ -49,13 +49,13 @@ function BadgeSeverite({ severite }: { severite: Alerte["severite"] }) {
 function labelType(type: Alerte["type"]): string {
   switch (type) {
     case "subscription_creep":
-      return "subscription creep";
+      return "Hausse d'abonnement";
     case "depassement_moyenne":
-      return "depassement moyenne";
+      return "D\u00e9passement moyenne";
     case "anomalie_montant":
-      return "anomalie montant";
+      return "Anomalie montant";
     case "tendance_hausse":
-      return "tendance hausse";
+      return "Tendance hausse";
   }
 }
 
@@ -143,10 +143,10 @@ function AiInsights() {
         </div>
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-white/90 lg:text-3xl">
-            ai insights
+            Analyses IA
           </h1>
           <p className="text-base text-white/35">
-            {alertes.length} alerte{alertes.length > 1 ? "s" : ""} detectee
+            {alertes.length} alerte{alertes.length > 1 ? "s" : ""} d\u00e9tect\u00e9e
             {alertes.length > 1 ? "s" : ""}
           </p>
         </div>
@@ -188,7 +188,7 @@ function AiInsights() {
       {alertes.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 text-white/25">
           <Brain size={48} strokeWidth={1} />
-          <p className="mt-4 text-base">aucune anomalie detectee</p>
+          <p className="mt-4 text-base">Aucune anomalie d\u00e9tect\u00e9e</p>
         </div>
       )}
     </div>

@@ -19,7 +19,7 @@ export function DernieresTransactions({
   return (
     <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 sm:p-6">
       <h2 className="mb-5 text-base font-medium tracking-widest text-white/40 uppercase sm:mb-6">
-        dernieres transactions
+        Derni\u00e8res transactions
       </h2>
 
       <div className="space-y-1">

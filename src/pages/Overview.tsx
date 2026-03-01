@@ -17,10 +17,10 @@ function Overview() {
       {/* titre de page */}
       <div>
         <h1 className="text-2xl font-semibold tracking-tight text-white/90 lg:text-3xl">
-          overview
+          Tableau de bord
         </h1>
         <p className="mt-1 text-base text-white/35">
-          synthese de vos finances personnelles
+          Synthèse de vos finances personnelles
         </p>
       </div>
 
