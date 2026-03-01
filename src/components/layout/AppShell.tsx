@@ -2,10 +2,14 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
+import { useAlerteAbonnements } from "@/hooks/useAlerteAbonnements";
 
 // shell principal de l'application avec sidebar et topbar
 export function AppShell() {
   const [sidebarOuvert, setSidebarOuvert] = useState(false);
+
+  // notifications automatiques des augmentations d'abonnements
+  useAlerteAbonnements();
 
   return (
     <div className="flex h-screen bg-[#09090b] text-white antialiased">

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Receipt } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import {
   Dialog,
@@ -17,19 +17,26 @@ export function ModalAjoutTransaction() {
   return (
     <Dialog open={ouvert} onOpenChange={setOuvert}>
       <Button variant="secondary" size="sm" onClick={() => setOuvert(true)}>
-        <Plus size={15} />
+        <Plus size={16} />
         ajouter
       </Button>
 
-      <DialogContent>
+      <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>nouvelle transaction</DialogTitle>
-          <DialogDescription>
-            saisir manuellement un revenu ou une depense
-          </DialogDescription>
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/[0.05]">
+              <Receipt size={20} className="text-white/50" />
+            </div>
+            <div>
+              <DialogTitle className="text-lg">nouvelle transaction</DialogTitle>
+              <DialogDescription className="text-sm">
+                ajouter un revenu, une depense ou un abonnement mensuel
+              </DialogDescription>
+            </div>
+          </div>
         </DialogHeader>
 
-        <div className="mt-4">
+        <div className="mt-5">
           <FormulaireTransaction onSucces={() => setOuvert(false)} />
         </div>
       </DialogContent>
