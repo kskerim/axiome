@@ -1,0 +1,92 @@
+import type { ColumnDef } from "@tanstack/react-table";
+import type { Transaction } from "@/types";
+import { MerchantAvatar } from "@/components/ui/MerchantAvatar";
+import { formaterMontant } from "@/lib/calculs";
+import { cn } from "@/lib/utils";
+import { Repeat } from "lucide-react";
+
+// definition des colonnes pour la table des transactions
+export const colonnesTransactions: ColumnDef<Transaction, unknown>[] = [
+  {
+    accessorKey: "marchand",
+    header: "marchand",
+    cell: ({ row }) => {
+      const tx = row.original;
+      return (
+        <div className="flex items-center gap-3">
+          <MerchantAvatar
+            marchand={tx.marchand}
+            categorie={tx.categorie}
+            taille={32}
+          />
+          <div>
+            <p className="text-sm font-medium text-white/80">{tx.marchand}</p>
+          </div>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "date",
+    header: "date",
+    cell: ({ row }) => {
+      const date = new Date(row.original.date);
+      return (
+        <span className="text-sm text-white/50">
+          {date.toLocaleDateString("fr-FR", {
+            day: "numeric",
+            month: "short",
+            year: "2-digit",
+          })}
+        </span>
+      );
+    },
+    sortingFn: (a, b) =>
+      new Date(a.original.date).getTime() - new Date(b.original.date).getTime(),
+  },
+  {
+    accessorKey: "categorie",
+    header: "categorie",
+    cell: ({ row }) => (
+      <span className="rounded-md bg-white/[0.05] px-2.5 py-1 text-xs font-medium text-white/50">
+        {row.original.categorie}
+      </span>
+    ),
+    filterFn: (row, _columnId, filterValue: string) => {
+      if (filterValue === "toutes") return true;
+      return row.original.categorie === filterValue;
+    },
+  },
+  {
+    accessorKey: "montant",
+    header: "montant",
+    cell: ({ row }) => {
+      const montant = row.original.montant;
+      return (
+        <span
+          className={cn(
+            "text-sm font-medium tabular-nums",
+            montant >= 0 ? "text-emerald-400" : "text-white/70"
+          )}
+        >
+          {montant >= 0 ? "+" : ""}
+          {formaterMontant(montant)}
+        </span>
+      );
+    },
+  },
+  {
+    accessorKey: "isRecurring",
+    header: "type",
+    cell: ({ row }) =>
+      row.original.isRecurring ? (
+        <div className="flex items-center gap-1.5 text-indigo-400/70">
+          <Repeat size={13} />
+          <span className="text-xs">recurrent</span>
+        </div>
+      ) : (
+        <span className="text-xs text-white/25">ponctuel</span>
+      ),
+    enableSorting: false,
+  },
+];
