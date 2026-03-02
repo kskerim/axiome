@@ -3,6 +3,9 @@ import { persist } from "zustand/middleware";
 import type { Transaction, CategorieTransaction } from "@/types";
 import { transactions as mockTransactions } from "@/data/mock-data";
 
+// version du schema pour les migrations
+const STORE_VERSION = 2;
+
 // budgets par defaut pour chaque categorie de depense
 const BUDGETS_DEFAUT: Record<string, number> = {
   alimentation: 400,
@@ -81,28 +84,54 @@ export const useAxiomeStore = create<AxiomeState>()(
     }),
     {
       name: "axiome-store",
+      version: STORE_VERSION,
       // persiste les transactions et les budgets
       partialize: (state) => ({ transactions: state.transactions, budgets: state.budgets }),
-      // deserialization des dates depuis json
+      // migration entre versions du schema
+      migrate: (persisted, version) => {
+        const state = persisted as Record<string, unknown>;
+        // v1 -> v2 : ajout des budgets par categorie
+        if (version < 2) {
+          state.budgets = BUDGETS_DEFAUT;
+        }
+        return state as { transactions: Transaction[]; budgets: Record<string, number> };
+      },
+      // deserialization des dates depuis json avec protection try/catch
       storage: {
         getItem: (name) => {
-          const str = localStorage.getItem(name);
-          if (!str) return null;
-          const parsed = JSON.parse(str) as {
-            state: { transactions: (Transaction & { date: string | Date })[] };
-            version?: number;
-          };
-          // reconvertit les dates string en objets Date
-          if (parsed.state?.transactions) {
-            parsed.state.transactions = parsed.state.transactions.map((t) => ({
-              ...t,
-              date: new Date(t.date),
-            }));
+          try {
+            const str = localStorage.getItem(name);
+            if (!str) return null;
+            const parsed = JSON.parse(str) as {
+              state: {
+                transactions: (Transaction & { date: string | Date })[];
+                budgets?: Record<string, number>;
+              };
+              version?: number;
+            };
+            // reconvertit les dates string en objets Date
+            if (parsed.state?.transactions) {
+              parsed.state.transactions = parsed.state.transactions.map((t) => ({
+                ...t,
+                date: new Date(t.date),
+              }));
+            }
+            return parsed as unknown as {
+              state: { transactions: Transaction[]; budgets: Record<string, number> };
+              version?: number;
+            };
+          } catch {
+            // donnees corrompues : on supprime et on repart de zero
+            localStorage.removeItem(name);
+            return null;
           }
-          return parsed as unknown as { state: { transactions: Transaction[] }; version?: number };
         },
         setItem: (name, value) => {
-          localStorage.setItem(name, JSON.stringify(value));
+          try {
+            localStorage.setItem(name, JSON.stringify(value));
+          } catch {
+            // quota depasse : on ne fait rien
+          }
         },
         removeItem: (name) => {
           localStorage.removeItem(name);
@@ -111,3 +140,14 @@ export const useAxiomeStore = create<AxiomeState>()(
     }
   )
 );
+
+// retourne la taille approximative du store en localStorage (en ko)
+export function getTailleStockage(): number {
+  try {
+    const str = localStorage.getItem("axiome-store");
+    if (!str) return 0;
+    return Math.round((str.length * 2) / 1024);
+  } catch {
+    return 0;
+  }
+}

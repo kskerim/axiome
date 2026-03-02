@@ -4,8 +4,12 @@ import {
   ArrowLeftRight,
   Brain,
   X,
+  RotateCcw,
+  HardDrive,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAxiomeStore, getTailleStockage } from "@/store";
+import { toast } from "sonner";
 
 // liens de navigation principaux
 const LIENS_NAV = [
@@ -22,6 +26,15 @@ interface SidebarProps {
 
 // sidebar de navigation principale
 export function Sidebar({ ouvert, onFermer }: SidebarProps) {
+  const reinitialiser = useAxiomeStore((s) => s.reinitialiser);
+  const tailleKo = getTailleStockage();
+
+  // reinitialise les donnees et notifie
+  const handleReset = () => {
+    reinitialiser();
+    toast.success("Donnees reinitialises");
+  };
+
   return (
     <>
       {/* overlay mobile */}
@@ -78,9 +91,26 @@ export function Sidebar({ ouvert, onFermer }: SidebarProps) {
         </nav>
 
         {/* footer sidebar */}
-        <div className="border-t border-white/[0.06] px-6 py-4">
-          <p className="text-[10px] font-light tracking-widest text-white/20 uppercase">
-            v1.0.0
+        <div className="border-t border-white/[0.06] px-4 py-4 space-y-3">
+          {/* bouton reinitialiser */}
+          <button
+            onClick={handleReset}
+            className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-xs text-white/25 transition-colors hover:bg-white/[0.03] hover:text-white/50"
+          >
+            <RotateCcw size={14} />
+            <span>Reinitialiser les donnees</span>
+          </button>
+
+          {/* indicateur stockage */}
+          <div className="flex items-center gap-2 px-2">
+            <HardDrive size={12} className="text-white/15" />
+            <span className="text-[10px] text-white/15">
+              {tailleKo} ko en local
+            </span>
+          </div>
+
+          <p className="px-2 text-[10px] font-light tracking-widest text-white/20 uppercase">
+            v2.0.0
           </p>
         </div>
       </aside>
