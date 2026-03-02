@@ -1,8 +1,8 @@
-import { faker } from "@faker-js/faker/locale/fr";
+import { seed, randomFloat, randomInt, randomElement, randomDate, uuid } from "@/lib/rand";
 import type { Transaction, CategorieTransaction } from "@/types";
 
 // seed fixe pour reproductibilite des donnees
-faker.seed(42);
+seed(42);
 
 // nombre total de transactions a generer
 const NOMBRE_TRANSACTIONS = 550;
@@ -239,11 +239,11 @@ function choisirCategorie(): CategorieTransaction {
     (acc, p) => acc + p,
     0
   );
-  let random = faker.number.float({ min: 0, max: totalPoids });
+  let r = randomFloat(0, totalPoids, 6);
 
   for (const cat of categories) {
-    random -= POIDS_CATEGORIES[cat];
-    if (random <= 0) return cat;
+    r -= POIDS_CATEGORIES[cat];
+    if (r <= 0) return cat;
   }
   return "divers";
 }
@@ -251,24 +251,20 @@ function choisirCategorie(): CategorieTransaction {
 // choisit un marchand aleatoire dans une categorie
 function choisirMarchand(categorie: CategorieTransaction): string {
   const config = MARCHANDS_PAR_CATEGORIE[categorie];
-  return faker.helpers.arrayElement(config.noms);
+  return randomElement(config.noms);
 }
 
 // genere un montant realiste pour une categorie donnee
 function genererMontant(categorie: CategorieTransaction): number {
   const { min, max } = MARCHANDS_PAR_CATEGORIE[categorie];
-  const montant = faker.number.float({
-    min,
-    max,
-    fractionDigits: 2,
-  });
+  const montant = randomFloat(min, max);
   // les revenus sont positifs, le reste est negatif
   return categorie === "revenus" ? montant : -montant;
 }
 
 // genere une date aleatoire dans la plage des 12 derniers mois
 function genererDate(): Date {
-  return faker.date.between({ from: DATE_DEBUT, to: DATE_FIN });
+  return randomDate(DATE_DEBUT, DATE_FIN);
 }
 
 // genere les transactions d'abonnements avec subscription creep
@@ -285,10 +281,10 @@ function genererAbonnementsCreep(): Transaction[] {
         montantCourant += abo.creepMontant;
       }
 
-      const date = new Date(2025, 2 + mois, faker.number.int({ min: 1, max: 5 }));
+      const date = new Date(2025, 2 + mois, randomInt(1, 5));
 
       transactions.push({
-        id: faker.string.uuid(),
+        id: uuid(),
         date,
         montant: -Number(montantCourant.toFixed(2)),
         categorie: "abonnements",
@@ -304,20 +300,16 @@ function genererAbonnementsCreep(): Transaction[] {
 // genere les revenus mensuels recurrents (salaire)
 function genererRevenusRecurrents(): Transaction[] {
   const transactions: Transaction[] = [];
-  const salaireBase = faker.number.float({
-    min: 2400,
-    max: 3200,
-    fractionDigits: 2,
-  });
+  const salaireBase = randomFloat(2400, 3200);
 
   for (let mois = 0; mois < 12; mois++) {
     const date = new Date(
       2025,
       2 + mois,
-      faker.number.int({ min: 25, max: 28 })
+      randomInt(25, 28)
     );
     transactions.push({
-      id: faker.string.uuid(),
+      id: uuid(),
       date,
       montant: salaireBase,
       categorie: "revenus",
@@ -338,7 +330,7 @@ function genererTransactionsAleatoires(nombre: number): Transaction[] {
     const marchand = choisirMarchand(categorie);
 
     transactions.push({
-      id: faker.string.uuid(),
+      id: uuid(),
       date: genererDate(),
       montant: genererMontant(categorie),
       categorie,

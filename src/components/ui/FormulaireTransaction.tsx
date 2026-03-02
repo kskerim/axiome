@@ -1,7 +1,6 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { faker } from "@faker-js/faker";
 import { toast } from "sonner";
 import {
   ArrowDownCircle,
@@ -147,7 +146,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
     const typeLabel = TYPES_TRANSACTION.find((t) => t.value === data.type)?.label ?? "";
 
     ajouterTransaction({
-      id: faker.string.uuid(),
+      id: crypto.randomUUID(),
       date: new Date(data.date),
       montant: montantFinal,
       categorie: data.categorie as CategorieTransaction,

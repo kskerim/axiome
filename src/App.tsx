@@ -1,9 +1,21 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "sonner";
 import { AppShell } from "@/components/layout/AppShell";
-import Overview from "@/pages/Overview";
-import Transactions from "@/pages/Transactions";
-import AiInsights from "@/pages/AiInsights";
+
+// lazy-load des pages pour reduire le bundle initial
+const Overview = lazy(() => import("@/pages/Overview"));
+const Transactions = lazy(() => import("@/pages/Transactions"));
+const AiInsights = lazy(() => import("@/pages/AiInsights"));
+
+// fallback de chargement minimal
+function PageLoader() {
+  return (
+    <div className="flex h-64 items-center justify-center">
+      <div className="h-6 w-6 animate-spin rounded-full border-2 border-white/10 border-t-white/50" />
+    </div>
+  );
+}
 
 // composant racine avec routing, layout et notifications
 function App() {
@@ -11,9 +23,9 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<AppShell />}>
-          <Route path="/" element={<Overview />} />
-          <Route path="/transactions" element={<Transactions />} />
-          <Route path="/insights" element={<AiInsights />} />
+          <Route path="/" element={<Suspense fallback={<PageLoader />}><Overview /></Suspense>} />
+          <Route path="/transactions" element={<Suspense fallback={<PageLoader />}><Transactions /></Suspense>} />
+          <Route path="/insights" element={<Suspense fallback={<PageLoader />}><AiInsights /></Suspense>} />
         </Route>
       </Routes>
       <Toaster
