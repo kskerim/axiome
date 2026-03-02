@@ -210,3 +210,151 @@ export function formaterVariation(variation: number): string {
   const signe = variation >= 0 ? "+" : "";
   return `${signe}${variation.toFixed(1)}%`;
 }
+
+// donnees d'un budget par categorie
+export interface BudgetCategorie {
+  categorie: string;
+  budget: number;
+  depense: number;
+  pourcentage: number;
+  restant: number;
+  depasse: boolean;
+}
+
+// calcule les budgets par categorie pour le mois en cours
+export function calculerBudgetsCategorie(
+  transactions: Transaction[],
+  budgets: Record<string, number>
+): BudgetCategorie[] {
+  const maintenant = new Date();
+  const moisActuel = maintenant.getMonth();
+  const anneeActuelle = maintenant.getFullYear();
+
+  // transactions du mois en cours (depenses uniquement)
+  const txMois = transactions.filter((t) => {
+    const d = new Date(t.date);
+    return (
+      d.getMonth() === moisActuel &&
+      d.getFullYear() === anneeActuelle &&
+      t.montant < 0
+    );
+  });
+
+  // depenses groupees par categorie
+  const depensesParCategorie: Record<string, number> = {};
+  for (const tx of txMois) {
+    const cat = tx.categorie;
+    depensesParCategorie[cat] = (depensesParCategorie[cat] ?? 0) + Math.abs(tx.montant);
+  }
+
+  // construit les budgets avec pourcentage et statut
+  const resultats: BudgetCategorie[] = [];
+
+  for (const [categorie, budget] of Object.entries(budgets)) {
+    const depense = depensesParCategorie[categorie] ?? 0;
+    if (depense === 0 && budget === 0) continue;
+
+    const pourcentage = budget === 0 ? 100 : Math.round((depense / budget) * 100);
+    resultats.push({
+      categorie,
+      budget,
+      depense: Math.round(depense),
+      pourcentage,
+      restant: Math.round(budget - depense),
+      depasse: depense > budget,
+    });
+  }
+
+  // trie par pourcentage decroissant (les plus consommes en premier)
+  return resultats.sort((a, b) => b.pourcentage - a.pourcentage);
+}
+
+// donnees de la projection fin de mois
+export interface ProjectionFinMois {
+  soldeActuel: number;
+  revenusRestants: number;
+  depensesRecurrentesAVenir: number;
+  soldeProjecte: number;
+  joursRestants: number;
+  depensesMoyennesJour: number;
+  depensesEstimeesRestantes: number;
+}
+
+// projette le solde en fin de mois
+export function calculerProjectionFinMois(
+  transactions: Transaction[]
+): ProjectionFinMois {
+  const maintenant = new Date();
+  const moisActuel = maintenant.getMonth();
+  const anneeActuelle = maintenant.getFullYear();
+  const jourActuel = maintenant.getDate();
+
+  // dernier jour du mois
+  const dernierJour = new Date(anneeActuelle, moisActuel + 1, 0).getDate();
+  const joursRestants = Math.max(0, dernierJour - jourActuel);
+  const joursPasses = jourActuel;
+
+  // transactions du mois en cours
+  const txMois = transactions.filter((t) => {
+    const d = new Date(t.date);
+    return d.getMonth() === moisActuel && d.getFullYear() === anneeActuelle;
+  });
+
+  // solde total actuel
+  const soldeActuel = transactions.reduce((acc, t) => acc + t.montant, 0);
+
+  // depenses variables du mois (hors recurrentes)
+  const depensesVariables = Math.abs(
+    txMois
+      .filter((t) => t.montant < 0 && !t.isRecurring)
+      .reduce((acc, t) => acc + t.montant, 0)
+  );
+
+  // moyenne journaliere des depenses variables
+  const depensesMoyennesJour = joursPasses > 0 ? depensesVariables / joursPasses : 0;
+
+  // estimation des depenses variables restantes
+  const depensesEstimeesRestantes = depensesMoyennesJour * joursRestants;
+
+  // depenses recurrentes du mois deja passees
+  const recurrentesPassees = txMois.filter((t) => t.montant < 0 && t.isRecurring);
+
+  // on cherche les recurrentes qui n'ont pas encore ete debitees ce mois
+  // on se base sur les recurrentes historiques du mois precedent
+  const moisPrec = moisActuel === 0 ? 11 : moisActuel - 1;
+  const anneePrec = moisActuel === 0 ? anneeActuelle - 1 : anneeActuelle;
+  const recurrentesPrec = transactions.filter((t) => {
+    const d = new Date(t.date);
+    return (
+      d.getMonth() === moisPrec &&
+      d.getFullYear() === anneePrec &&
+      t.montant < 0 &&
+      t.isRecurring
+    );
+  });
+
+  // marchands recurrents deja debites ce mois
+  const marchandsDebites = new Set(
+    recurrentesPassees.map((t) => t.marchand.toLowerCase())
+  );
+
+  // montant des recurrentes attendues mais pas encore debitees
+  const depensesRecurrentesAVenir = Math.abs(
+    recurrentesPrec
+      .filter((t) => !marchandsDebites.has(t.marchand.toLowerCase()))
+      .reduce((acc, t) => acc + t.montant, 0)
+  );
+
+  // projection : solde actuel - recurrentes a venir - depenses variables estimees
+  const soldeProjecte = soldeActuel - depensesRecurrentesAVenir - depensesEstimeesRestantes;
+
+  return {
+    soldeActuel: Math.round(soldeActuel),
+    revenusRestants: 0,
+    depensesRecurrentesAVenir: Math.round(depensesRecurrentesAVenir),
+    soldeProjecte: Math.round(soldeProjecte),
+    joursRestants,
+    depensesMoyennesJour: Math.round(depensesMoyennesJour),
+    depensesEstimeesRestantes: Math.round(depensesEstimeesRestantes),
+  };
+}

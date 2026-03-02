@@ -1,16 +1,27 @@
 import { useAxiomeStore } from "@/store";
-import { calculerKpi, calculerEvolutionMensuelle, calculerResteAVivre } from "@/lib/calculs";
+import {
+  calculerKpi,
+  calculerEvolutionMensuelle,
+  calculerResteAVivre,
+  calculerBudgetsCategorie,
+  calculerProjectionFinMois,
+} from "@/lib/calculs";
 import { KpiCard } from "@/components/ui/KpiCard";
 import { SoldeChart } from "@/components/ui/SoldeChart";
 import { DernieresTransactions } from "@/components/ui/DernieresTransactions";
 import { ResteAVivre } from "@/components/ui/ResteAVivre";
+import { JaugesCategories } from "@/components/ui/JaugesCategories";
+import { ProjectionFinMois } from "@/components/ui/ProjectionFinMois";
 
-// page principale avec kpi, graphique, reste a vivre et dernieres transactions
+// page principale avec kpi, graphique, budgets, projection et dernieres transactions
 function Overview() {
   const transactions = useAxiomeStore((s) => s.transactions);
+  const budgets = useAxiomeStore((s) => s.budgets);
   const kpi = calculerKpi(transactions);
   const evolution = calculerEvolutionMensuelle(transactions);
   const resteAVivre = calculerResteAVivre(transactions);
+  const budgetsCategorie = calculerBudgetsCategorie(transactions, budgets);
+  const projection = calculerProjectionFinMois(transactions);
 
   return (
     <div className="space-y-6 sm:space-y-8">
@@ -44,13 +55,23 @@ function Overview() {
         />
       </div>
 
-      {/* graphique + reste a vivre + dernieres transactions */}
+      {/* graphique + reste a vivre + projection */}
       <div className="grid gap-6 lg:grid-cols-5 lg:gap-8">
         <div className="lg:col-span-3">
           <SoldeChart donnees={evolution} />
         </div>
         <div className="lg:col-span-2 space-y-6">
           <ResteAVivre donnees={resteAVivre} />
+          <ProjectionFinMois projection={projection} />
+        </div>
+      </div>
+
+      {/* jauges de budget + dernieres transactions */}
+      <div className="grid gap-6 lg:grid-cols-5 lg:gap-8">
+        <div className="lg:col-span-3">
+          <JaugesCategories budgets={budgetsCategorie} />
+        </div>
+        <div className="lg:col-span-2">
           <DernieresTransactions transactions={transactions} />
         </div>
       </div>
