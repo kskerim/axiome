@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import {
   ArrowDownCircle,
   ArrowUpCircle,
-  Repeat,
   ShoppingBag,
   Car,
   Home,
@@ -25,6 +24,8 @@ import {
   PawPrint,
   Wrench,
   Gift,
+  Check,
+  Repeat,
 } from "lucide-react";
 import type { CategorieTransaction } from "@/types";
 import { useAxiomeStore } from "@/store";
@@ -33,65 +34,44 @@ import { Label } from "@/components/ui/Label";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
-// types visuels de transaction
-const TYPES_TRANSACTION = [
-  {
-    value: "depense_ponctuelle" as const,
-    label: "Dépense",
-    description: "Achat unique",
-    icon: ArrowDownCircle,
-    couleur: "text-red-400 bg-red-500/10 border-red-500/20",
-    couleurActive: "text-red-400 bg-red-500/15 border-red-500/40 ring-1 ring-red-500/20",
-  },
-  {
-    value: "depense_recurrente" as const,
-    label: "Abonnement",
-    description: "Paiement mensuel",
-    icon: Repeat,
-    couleur: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
-    couleurActive: "text-indigo-400 bg-indigo-500/15 border-indigo-500/40 ring-1 ring-indigo-500/20",
-  },
-  {
-    value: "revenu" as const,
-    label: "Revenu",
-    description: "Salaire, virement...",
-    icon: ArrowUpCircle,
-    couleur: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
-    couleurActive: "text-emerald-400 bg-emerald-500/15 border-emerald-500/40 ring-1 ring-emerald-500/20",
-  },
-];
-
-// categories avec icones et couleurs
-const CATEGORIES_CONFIG: {
+// categories pour les depenses
+const CATEGORIES_DEPENSES: {
   value: CategorieTransaction;
   label: string;
   icon: React.ComponentType<{ size?: number }>;
-  types: string[];
 }[] = [
-  { value: "alimentation", label: "Alimentation", icon: ShoppingBag, types: ["depense_ponctuelle", "depense_recurrente"] },
-  { value: "transport", label: "Transport", icon: Car, types: ["depense_ponctuelle", "depense_recurrente"] },
-  { value: "automobile", label: "Automobile", icon: Fuel, types: ["depense_ponctuelle", "depense_recurrente"] },
-  { value: "logement", label: "Logement", icon: Home, types: ["depense_ponctuelle", "depense_recurrente"] },
-  { value: "loisirs", label: "Loisirs", icon: Gamepad2, types: ["depense_ponctuelle", "depense_recurrente"] },
-  { value: "sante", label: "Santé", icon: HeartPulse, types: ["depense_ponctuelle", "depense_recurrente"] },
-  { value: "restauration", label: "Restauration", icon: UtensilsCrossed, types: ["depense_ponctuelle", "depense_recurrente"] },
-  { value: "bar_cafe", label: "Bar / Café", icon: Coffee, types: ["depense_ponctuelle"] },
-  { value: "abonnements", label: "Abonnements", icon: CreditCard, types: ["depense_recurrente"] },
-  { value: "shopping", label: "Shopping", icon: ShoppingBag, types: ["depense_ponctuelle"] },
-  { value: "beaute", label: "Beauté", icon: Scissors, types: ["depense_ponctuelle", "depense_recurrente"] },
-  { value: "animaux", label: "Animaux", icon: PawPrint, types: ["depense_ponctuelle", "depense_recurrente"] },
-  { value: "maison", label: "Maison", icon: Wrench, types: ["depense_ponctuelle"] },
-  { value: "cadeaux", label: "Cadeaux", icon: Gift, types: ["depense_ponctuelle"] },
-  { value: "education", label: "Éducation", icon: GraduationCap, types: ["depense_ponctuelle", "depense_recurrente"] },
-  { value: "voyage", label: "Voyage", icon: Plane, types: ["depense_ponctuelle"] },
-  { value: "divers", label: "Divers", icon: CircleDot, types: ["depense_ponctuelle", "depense_recurrente"] },
-  { value: "revenus", label: "Revenus", icon: Banknote, types: ["revenu"] },
-  { value: "epargne", label: "Épargne", icon: PiggyBank, types: ["revenu"] },
+  { value: "alimentation", label: "Alimentation", icon: ShoppingBag },
+  { value: "transport", label: "Transport", icon: Car },
+  { value: "automobile", label: "Automobile", icon: Fuel },
+  { value: "logement", label: "Logement", icon: Home },
+  { value: "loisirs", label: "Loisirs", icon: Gamepad2 },
+  { value: "sante", label: "Sante", icon: HeartPulse },
+  { value: "restauration", label: "Restauration", icon: UtensilsCrossed },
+  { value: "bar_cafe", label: "Bar / Cafe", icon: Coffee },
+  { value: "abonnements", label: "Abonnements", icon: CreditCard },
+  { value: "shopping", label: "Shopping", icon: ShoppingBag },
+  { value: "beaute", label: "Beaute", icon: Scissors },
+  { value: "animaux", label: "Animaux", icon: PawPrint },
+  { value: "maison", label: "Maison", icon: Wrench },
+  { value: "cadeaux", label: "Cadeaux", icon: Gift },
+  { value: "education", label: "Education", icon: GraduationCap },
+  { value: "voyage", label: "Voyage", icon: Plane },
+  { value: "divers", label: "Divers", icon: CircleDot },
+];
+
+// categories pour les revenus
+const CATEGORIES_REVENUS: {
+  value: CategorieTransaction;
+  label: string;
+  icon: React.ComponentType<{ size?: number }>;
+}[] = [
+  { value: "revenus", label: "Revenus", icon: Banknote },
+  { value: "epargne", label: "Epargne", icon: PiggyBank },
 ];
 
 // schema de validation zod
 const schemaTransaction = z.object({
-  type: z.enum(["revenu", "depense_ponctuelle", "depense_recurrente"]),
+  estRevenu: z.boolean(),
   marchand: z.string().min(1, "le nom est requis").max(50),
   montant: z
     .number({ error: "montant invalide" })
@@ -99,6 +79,7 @@ const schemaTransaction = z.object({
     .max(100000, "montant trop eleve"),
   categorie: z.string().min(1, "la categorie est requise"),
   date: z.string().min(1, "la date est requise"),
+  estRecurrente: z.boolean(),
 });
 
 type FormTransaction = z.infer<typeof schemaTransaction>;
@@ -108,7 +89,7 @@ interface FormulaireTransactionProps {
   onSucces?: () => void;
 }
 
-// formulaire de saisie d'une transaction avec ux amelioree
+// formulaire de saisie d'une transaction facon bankin
 export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) {
   const ajouterTransaction = useAxiomeStore((s) => s.ajouterTransaction);
 
@@ -123,27 +104,22 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
   } = useForm<FormTransaction>({
     resolver: zodResolver(schemaTransaction),
     defaultValues: {
-      type: "depense_ponctuelle",
+      estRevenu: false,
       marchand: "",
       montant: undefined,
       categorie: "",
       date: new Date().toISOString().split("T")[0],
+      estRecurrente: false,
     },
   });
 
-  const typeSelectionne = watch("type");
-  const categorieSelectionnee = watch("categorie");
-
-  // categories filtrees par type
-  const categoriesDisponibles = CATEGORIES_CONFIG.filter((c) =>
-    c.types.includes(typeSelectionne)
-  );
+  const estRevenu = watch("estRevenu");
+  const estRecurrente = watch("estRecurrente");
+  const categoriesDisponibles = estRevenu ? CATEGORIES_REVENUS : CATEGORIES_DEPENSES;
 
   // soumission du formulaire
   const onSubmit = (data: FormTransaction) => {
-    const estRevenu = data.type === "revenu";
-    const montantFinal = estRevenu ? data.montant : -data.montant;
-    const typeLabel = TYPES_TRANSACTION.find((t) => t.value === data.type)?.label ?? "";
+    const montantFinal = data.estRevenu ? data.montant : -data.montant;
 
     ajouterTransaction({
       id: crypto.randomUUID(),
@@ -151,74 +127,101 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
       montant: montantFinal,
       categorie: data.categorie as CategorieTransaction,
       marchand: data.marchand,
-      isRecurring: data.type === "depense_recurrente",
+      isRecurring: data.estRecurrente,
     });
 
-    const emoji = estRevenu ? "+" : "-";
+    const signe = data.estRevenu ? "+" : "-";
     toast.success(
-      `${typeLabel} "${data.marchand}" ajout\u00e9e (${emoji}${data.montant.toFixed(2)})`
+      `${data.estRevenu ? "Revenu" : "Depense"} "${data.marchand}" (${signe}${data.montant.toFixed(2)} EUR)`
     );
     reset();
     onSucces?.();
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      {/* selecteur de type visuel */}
-      <div className="space-y-3">
-        <Label className="text-sm text-white/50">Type de transaction</Label>
-        <Controller
-          name="type"
-          control={control}
-          render={({ field }) => (
-            <div className="grid grid-cols-3 gap-3">
-              {TYPES_TRANSACTION.map((t) => {
-                const actif = field.value === t.value;
-                const Icon = t.icon;
-                return (
-                  <button
-                    key={t.value}
-                    type="button"
-                    onClick={() => {
-                      field.onChange(t.value);
-                      // reset la categorie si elle n'est pas compatible
-                      const catOk = CATEGORIES_CONFIG.find(
-                        (c) => c.value === categorieSelectionnee && c.types.includes(t.value)
-                      );
-                      if (!catOk) setValue("categorie", "");
-                    }}
-                    className={cn(
-                      "flex flex-col items-center gap-2 rounded-xl border p-3 transition-all duration-200 sm:p-4",
-                      actif ? t.couleurActive : t.couleur,
-                      !actif && "opacity-60 hover:opacity-80"
-                    )}
-                  >
-                    <Icon size={24} />
-                    <span className="text-sm font-semibold">{t.label}</span>
-                    <span className="hidden text-[11px] opacity-60 sm:block">
-                      {t.description}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        />
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      {/* toggle revenu / depense */}
+      <Controller
+        name="estRevenu"
+        control={control}
+        render={({ field }) => (
+          <div className="grid grid-cols-2 gap-2 rounded-xl bg-white/[0.03] p-1.5">
+            <button
+              type="button"
+              onClick={() => {
+                field.onChange(false);
+                setValue("categorie", "");
+                setValue("estRecurrente", false);
+              }}
+              className={cn(
+                "flex items-center justify-center gap-2 rounded-lg py-3 text-sm font-semibold transition-all duration-200",
+                !field.value
+                  ? "bg-red-500/15 text-red-400 shadow-sm"
+                  : "text-white/40 hover:text-white/60"
+              )}
+            >
+              <ArrowDownCircle size={18} />
+              Depense
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                field.onChange(true);
+                setValue("categorie", "");
+                setValue("estRecurrente", false);
+              }}
+              className={cn(
+                "flex items-center justify-center gap-2 rounded-lg py-3 text-sm font-semibold transition-all duration-200",
+                field.value
+                  ? "bg-emerald-500/15 text-emerald-400 shadow-sm"
+                  : "text-white/40 hover:text-white/60"
+              )}
+            >
+              <ArrowUpCircle size={18} />
+              Revenu
+            </button>
+          </div>
+        )}
+      />
+
+      {/* montant en gros (facon bankin) */}
+      <div className="space-y-2">
+        <div className="relative">
+          <Euro
+            size={22}
+            className={cn(
+              "absolute left-4 top-1/2 -translate-y-1/2",
+              estRevenu ? "text-emerald-400/40" : "text-red-400/40"
+            )}
+          />
+          <Input
+            id="montant"
+            type="number"
+            step="0.01"
+            placeholder="0.00"
+            className={cn(
+              "h-16 pl-12 text-3xl font-semibold tabular-nums tracking-tight",
+              estRevenu ? "text-emerald-400" : "text-white/90"
+            )}
+            {...register("montant", { valueAsNumber: true })}
+          />
+        </div>
+        {errors.montant && (
+          <p className="text-sm text-red-400">{errors.montant.message}</p>
+        )}
       </div>
 
-      {/* nom du marchand / source */}
+      {/* marchand / source */}
       <div className="space-y-2">
         <Label htmlFor="marchand">
-          {typeSelectionne === "revenu" ? "Source du revenu" : typeSelectionne === "depense_recurrente" ? "Nom de l'abonnement" : "Marchand / commerce"}
+          {estRevenu ? "Source" : "Marchand"}
         </Label>
         <Input
           id="marchand"
           placeholder={
-            typeSelectionne === "revenu"
-              ? "ex: salaire, freelance, virement..."
-              : typeSelectionne === "depense_recurrente"
-                ? "ex: netflix, spotify, salle de sport..."
-                : "ex: carrefour, amazon, uber..."
+            estRevenu
+              ? "ex: salaire, freelance..."
+              : "ex: carrefour, amazon, uber..."
           }
           {...register("marchand")}
         />
@@ -227,44 +230,18 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
         )}
       </div>
 
-      {/* montant + date cote a cote */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {/* montant */}
-        <div className="space-y-2">
-          <Label htmlFor="montant">
-            Montant {typeSelectionne === "depense_recurrente" && "/ mois"}
-          </Label>
-          <div className="relative">
-            <Euro size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/25" />
-            <Input
-              id="montant"
-              type="number"
-              step="0.01"
-              placeholder="0.00"
-              className="pl-10"
-              {...register("montant", { valueAsNumber: true })}
-            />
-          </div>
-          {errors.montant && (
-            <p className="text-sm text-red-400">{errors.montant.message}</p>
-          )}
-        </div>
-
-        {/* date */}
-        <div className="space-y-2">
-          <Label htmlFor="date">
-            {typeSelectionne === "depense_recurrente" ? "D\u00e9but de l'abonnement" : "Date"}
-          </Label>
-          <Input id="date" type="date" {...register("date")} />
-          {errors.date && (
-            <p className="text-sm text-red-400">{errors.date.message}</p>
-          )}
-        </div>
+      {/* date */}
+      <div className="space-y-2">
+        <Label htmlFor="date">Date</Label>
+        <Input id="date" type="date" {...register("date")} />
+        {errors.date && (
+          <p className="text-sm text-red-400">{errors.date.message}</p>
+        )}
       </div>
 
-      {/* grille de categories visuelles */}
+      {/* grille de categories */}
       <div className="space-y-2">
-        <Label>Cat\u00e9gorie</Label>
+        <Label>Categorie</Label>
         <Controller
           name="categorie"
           control={control}
@@ -279,14 +256,14 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
                     type="button"
                     onClick={() => field.onChange(cat.value)}
                     className={cn(
-                      "flex flex-col items-center gap-1.5 rounded-lg border border-white/[0.06] p-3 text-white/50 transition-all duration-200",
+                      "flex flex-col items-center gap-1.5 rounded-lg border border-white/[0.06] p-2.5 text-white/50 transition-all duration-200",
                       actif
                         ? "border-white/20 bg-white/[0.08] text-white ring-1 ring-white/10"
                         : "hover:border-white/10 hover:bg-white/[0.03] hover:text-white/70"
                     )}
                   >
-                    <Icon size={20} />
-                    <span className="text-xs font-medium">{cat.label}</span>
+                    <Icon size={18} />
+                    <span className="text-[11px] font-medium leading-tight">{cat.label}</span>
                   </button>
                 );
               })}
@@ -298,23 +275,68 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
         )}
       </div>
 
-      {/* indicateur visuel recurrent */}
-      {typeSelectionne === "depense_recurrente" && (
-        <div className="flex items-center gap-3 rounded-lg border border-indigo-500/10 bg-indigo-500/[0.04] p-3.5">
-          <Repeat size={18} className="text-indigo-400" />
-          <p className="text-sm text-indigo-300/80">
-            Cet abonnement sera marqu\u00e9 comme paiement mensuel r\u00e9current
+      {/* checkbox depense recurrente (masquee pour les revenus) */}
+      {!estRevenu && (
+        <Controller
+          name="estRecurrente"
+          control={control}
+          render={({ field }) => (
+            <button
+              type="button"
+              onClick={() => field.onChange(!field.value)}
+              className={cn(
+                "flex w-full items-center gap-3 rounded-xl border p-4 transition-all duration-200",
+                field.value
+                  ? "border-indigo-500/30 bg-indigo-500/[0.06]"
+                  : "border-white/[0.06] bg-transparent hover:border-white/10"
+              )}
+            >
+              <div
+                className={cn(
+                  "flex h-5 w-5 items-center justify-center rounded-md border transition-all",
+                  field.value
+                    ? "border-indigo-500 bg-indigo-500"
+                    : "border-white/20 bg-transparent"
+                )}
+              >
+                {field.value && <Check size={12} className="text-white" />}
+              </div>
+              <div className="flex items-center gap-2">
+                <Repeat size={16} className={field.value ? "text-indigo-400" : "text-white/35"} />
+                <span className={cn(
+                  "text-sm font-medium",
+                  field.value ? "text-indigo-300" : "text-white/50"
+                )}>
+                  Depense recurrente (mensuelle)
+                </span>
+              </div>
+            </button>
+          )}
+        />
+      )}
+
+      {/* indicateur recurrence */}
+      {estRecurrente && !estRevenu && (
+        <div className="flex items-center gap-2 rounded-lg bg-indigo-500/[0.04] px-3 py-2">
+          <Repeat size={14} className="text-indigo-400/70" />
+          <p className="text-xs text-indigo-300/60">
+            sera deduite automatiquement chaque mois pour les previsions
           </p>
         </div>
       )}
 
       {/* bouton de soumission */}
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
-        {typeSelectionne === "revenu"
-          ? "Ajouter ce revenu"
-          : typeSelectionne === "depense_recurrente"
-            ? "Ajouter cet abonnement"
-            : "Ajouter cette d\u00e9pense"}
+      <Button
+        type="submit"
+        disabled={isSubmitting}
+        className={cn(
+          "w-full text-base font-semibold",
+          estRevenu
+            ? "bg-emerald-600 hover:bg-emerald-500"
+            : "bg-white/90 text-black hover:bg-white/80"
+        )}
+      >
+        {estRevenu ? "Ajouter ce revenu" : "Ajouter cette depense"}
       </Button>
     </form>
   );

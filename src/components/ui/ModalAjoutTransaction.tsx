@@ -24,7 +24,7 @@ export function ModalAjoutTransaction() {
         Ajouter
       </Button>
 
-      <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-xl max-h-[85vh] overflow-y-auto sm:max-h-[90vh]">
         <DialogHeader>
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/[0.05]">
@@ -33,13 +33,13 @@ export function ModalAjoutTransaction() {
             <div>
               <DialogTitle className="text-lg">Nouvelle transaction</DialogTitle>
               <DialogDescription className="text-sm">
-                Ajouter un revenu, une dépense ou un abonnement mensuel
+                Ajouter un revenu ou une depense
               </DialogDescription>
             </div>
           </div>
         </DialogHeader>
 
-        <div className="mt-5">
+        <div className="mt-4 pb-2">
           <FormulaireTransaction onSucces={() => setOuvert(false)} />
         </div>
       </DialogContent>
