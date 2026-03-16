@@ -2,6 +2,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { Transaction } from "@/types";
 import { MerchantAvatar } from "@/components/ui/MerchantAvatar";
 import { formaterMontant } from "@/lib/calculs";
+import { labelCategorie } from "@/lib/categories";
 import { cn } from "@/lib/utils";
 import { Repeat, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -11,7 +12,7 @@ import { useAxiomeStore } from "@/store";
 export const colonnesTransactions: ColumnDef<Transaction, unknown>[] = [
   {
     accessorKey: "marchand",
-    header: "marchand",
+    header: "Marchand",
     cell: ({ row }) => {
       const tx = row.original;
       return (
@@ -30,7 +31,7 @@ export const colonnesTransactions: ColumnDef<Transaction, unknown>[] = [
   },
   {
     accessorKey: "date",
-    header: "date",
+    header: "Date",
     cell: ({ row }) => {
       const date = new Date(row.original.date);
       return (
@@ -48,10 +49,10 @@ export const colonnesTransactions: ColumnDef<Transaction, unknown>[] = [
   },
   {
     accessorKey: "categorie",
-    header: "categorie",
+    header: "Categorie",
     cell: ({ row }) => (
       <span className="rounded-md bg-white/[0.05] px-2.5 py-1 text-sm font-medium text-white/55">
-        {row.original.categorie}
+        {labelCategorie(row.original.categorie)}
       </span>
     ),
     filterFn: (row, _columnId, filterValue: string) => {
@@ -61,7 +62,7 @@ export const colonnesTransactions: ColumnDef<Transaction, unknown>[] = [
   },
   {
     accessorKey: "montant",
-    header: "montant",
+    header: "Montant",
     cell: ({ row }) => {
       const montant = row.original.montant;
       return (
@@ -79,15 +80,15 @@ export const colonnesTransactions: ColumnDef<Transaction, unknown>[] = [
   },
   {
     accessorKey: "isRecurring",
-    header: "type",
+    header: "Type",
     cell: ({ row }) =>
       row.original.isRecurring ? (
         <div className="flex items-center gap-1.5 text-indigo-400/70">
           <Repeat size={15} />
-          <span className="text-sm">récurrent</span>
+          <span className="text-sm">Recurrent</span>
         </div>
       ) : (
-        <span className="text-sm text-white/30">ponctuel</span>
+        <span className="text-sm text-white/30">Ponctuel</span>
       ),
     enableSorting: false,
   },

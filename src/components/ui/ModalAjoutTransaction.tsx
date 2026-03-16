@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Plus, Receipt } from "lucide-react";
-import { Button } from "@/components/ui/Button";
 import {
   Dialog,
   DialogContent,
@@ -16,19 +15,21 @@ export function ModalAjoutTransaction() {
 
   return (
     <Dialog open={ouvert} onOpenChange={setOuvert}>
-      <Button
+      {/* bouton dans la topbar */}
+      <button
         onClick={() => setOuvert(true)}
-        className="gap-2 bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-600/20 transition-all hover:bg-violet-500 hover:shadow-violet-500/30 sm:px-6 sm:text-base"
+        className="flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-600/25 transition-all hover:bg-violet-500 hover:shadow-violet-500/30 hover:scale-[1.02] active:scale-[0.98] sm:px-5 sm:text-base"
       >
         <Plus size={18} strokeWidth={2.5} />
-        Ajouter
-      </Button>
+        <span className="hidden sm:inline">Nouvelle transaction</span>
+        <span className="sm:hidden">Ajouter</span>
+      </button>
 
       <DialogContent className="max-w-xl max-h-[85vh] overflow-y-auto sm:max-h-[90vh]">
         <DialogHeader>
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/[0.05]">
-              <Receipt size={20} className="text-white/50" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/10">
+              <Receipt size={20} className="text-violet-400" />
             </div>
             <div>
               <DialogTitle className="text-lg">Nouvelle transaction</DialogTitle>

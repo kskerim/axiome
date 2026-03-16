@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -8,6 +9,7 @@ import {
   HardDrive,
   LogOut,
   Zap,
+  AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAxiomeStore, getTailleStockage } from "@/store";
@@ -32,12 +34,20 @@ export function Sidebar({ ouvert, onFermer }: SidebarProps) {
   const reinitialiser = useAxiomeStore((s) => s.reinitialiser);
   const tailleKo = getTailleStockage();
   const { utilisateur, modeSimulation, deconnexion } = useAuth();
+  const [confirmReset, setConfirmReset] = useState(false);
 
-  // reinitialise les donnees et notifie
+  // reinitialise les donnees apres confirmation
   const handleReset = () => {
+    if (!confirmReset) {
+      setConfirmReset(true);
+      return;
+    }
     reinitialiser();
-    toast.success("Données réinitialisées");
+    setConfirmReset(false);
+    toast.success("Toutes les donnees ont ete remises a zero");
   };
+
+  const annulerReset = () => setConfirmReset(false);
 
   // deconnexion ou sortie du mode simulation
   const handleDeconnexion = async () => {
@@ -109,22 +119,48 @@ export function Sidebar({ ouvert, onFermer }: SidebarProps) {
 
         {/* footer sidebar */}
         <div className="border-t border-white/[0.06] px-4 py-4 space-y-3">
-          {/* bouton reinitialiser */}
-          <button
-            onClick={handleReset}
-            className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-xs text-white/25 transition-colors hover:bg-white/[0.03] hover:text-white/50"
-          >
-            <RotateCcw size={14} />
-            <span>Réinitialiser les données</span>
-          </button>
+          {/* bouton reinitialiser — bien visible */}
+          {!confirmReset ? (
+            <button
+              onClick={handleReset}
+              className="flex w-full items-center gap-2.5 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2.5 text-sm font-medium text-white/50 transition-all hover:border-red-500/20 hover:bg-red-500/[0.05] hover:text-red-400"
+            >
+              <RotateCcw size={15} />
+              <span>Reinitialiser les donnees</span>
+            </button>
+          ) : (
+            <div className="space-y-2 rounded-lg border border-red-500/20 bg-red-500/[0.05] p-3">
+              <div className="flex items-center gap-2 text-red-400">
+                <AlertTriangle size={14} />
+                <span className="text-xs font-medium">Confirmer la reinitialisation ?</span>
+              </div>
+              <p className="text-[11px] text-white/40">
+                Toutes vos transactions et budgets seront supprimes.
+              </p>
+              <div className="flex gap-2">
+                <button
+                  onClick={handleReset}
+                  className="flex-1 rounded-md bg-red-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-red-500"
+                >
+                  Confirmer
+                </button>
+                <button
+                  onClick={annulerReset}
+                  className="flex-1 rounded-md border border-white/10 px-3 py-1.5 text-xs font-medium text-white/50 transition-colors hover:bg-white/[0.05]"
+                >
+                  Annuler
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* bouton deconnexion */}
           <button
             onClick={handleDeconnexion}
-            className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-xs text-white/25 transition-colors hover:bg-red-500/10 hover:text-red-400"
+            className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-white/40 transition-colors hover:bg-red-500/10 hover:text-red-400"
           >
-            <LogOut size={14} />
-            <span>{modeSimulation ? "Quitter la simulation" : "Se déconnecter"}</span>
+            <LogOut size={15} />
+            <span>{modeSimulation ? "Quitter la simulation" : "Se deconnecter"}</span>
           </button>
 
           {/* email utilisateur ou simulation */}

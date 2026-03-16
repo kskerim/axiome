@@ -96,8 +96,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // active le mode simulation (sans compte)
   const activerSimulation = () => {
+    // nettoie le localstorage pour demarrer vide
+    localStorage.removeItem("axiome-store");
     setModeSimulation(true);
   };
+
+  // nettoie la session simulation quand l'utilisateur quitte la page
+  useEffect(() => {
+    if (!modeSimulation) return;
+
+    const nettoyerSession = () => {
+      localStorage.removeItem("axiome-store");
+    };
+
+    window.addEventListener("beforeunload", nettoyerSession);
+    return () => window.removeEventListener("beforeunload", nettoyerSession);
+  }, [modeSimulation]);
 
   return (
     <AuthContext.Provider

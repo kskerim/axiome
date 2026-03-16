@@ -163,7 +163,7 @@ function AiInsights() {
             {critiques.length}
           </p>
           <p className="mt-1 text-xs font-medium tracking-widest text-red-400/60 uppercase">
-            critiques
+            Critiques
           </p>
         </div>
         <div className="rounded-xl border border-amber-500/10 bg-amber-500/[0.03] p-5 text-center sm:p-6">
@@ -171,13 +171,13 @@ function AiInsights() {
             {attentions.length}
           </p>
           <p className="mt-1 text-xs font-medium tracking-widest text-amber-400/60 uppercase">
-            attention
+            Attention
           </p>
         </div>
         <div className="rounded-xl border border-blue-500/10 bg-blue-500/[0.03] p-5 text-center sm:p-6">
           <p className="text-3xl font-semibold text-blue-400">{infos.length}</p>
           <p className="mt-1 text-xs font-medium tracking-widest text-blue-400/60 uppercase">
-            info
+            Info
           </p>
         </div>
       </div>

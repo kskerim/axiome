@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Transaction, CategorieTransaction } from "@/types";
-import { transactions as mockTransactions } from "@/data/mock-data";
 import {
   chargerTransactions,
   insererTransaction,
@@ -54,7 +53,7 @@ interface AxiomeState {
 export const useAxiomeStore = create<AxiomeState>()(
   persist(
     (set, get) => ({
-      transactions: mockTransactions,
+      transactions: [],
       budgets: BUDGETS_DEFAUT,
       filtreCategorie: "toutes",
       userId: null,
@@ -108,10 +107,10 @@ export const useAxiomeStore = create<AxiomeState>()(
           budgets: { ...state.budgets, [categorie]: montant },
         })),
 
-      // reinitialise avec les donnees mock (mode simulation)
+      // reinitialise toutes les donnees a zero
       reinitialiser: () =>
         set({
-          transactions: mockTransactions,
+          transactions: [],
           budgets: BUDGETS_DEFAUT,
           filtreCategorie: "toutes",
         }),

@@ -1,33 +1,9 @@
 import { useAxiomeStore } from "@/store";
-import type { CategorieTransaction } from "@/types";
 import { DataTable } from "@/components/ui/DataTable";
 import { colonnesTransactions } from "@/components/ui/colonnes-transactions";
 import { cn } from "@/lib/utils";
 import { InfoBulle } from "@/components/ui/InfoBulle";
-
-// liste des categories pour le filtre
-const CATEGORIES: Array<CategorieTransaction | "toutes"> = [
-  "toutes",
-  "alimentation",
-  "transport",
-  "automobile",
-  "logement",
-  "loisirs",
-  "sante",
-  "restauration",
-  "bar_cafe",
-  "abonnements",
-  "shopping",
-  "beaute",
-  "animaux",
-  "maison",
-  "cadeaux",
-  "education",
-  "voyage",
-  "revenus",
-  "epargne",
-  "divers",
-];
+import { CATEGORIES_FILTRE, labelCategorie } from "@/lib/categories";
 
 // vue principale de la liste des transactions avec filtres et tri
 function Transactions() {
@@ -43,27 +19,27 @@ function Transactions() {
           <h1 className="text-2xl font-semibold tracking-tight text-white/90 lg:text-3xl">
             Transactions
           </h1>
-          <InfoBulle texte="Liste de toutes vos transactions. Utilisez les filtres par catégorie pour affiner la vue. Cliquez sur les colonnes pour trier." />
+          <InfoBulle texte="Liste de toutes vos transactions. Utilisez les filtres par categorie pour affiner la vue. Cliquez sur les colonnes pour trier." />
         </div>
         <p className="mt-1 text-base text-white/35">
-          Historique complet de vos opérations
+          Historique complet de vos operations
         </p>
       </div>
 
       {/* filtres par categorie */}
-      <div className="flex flex-wrap gap-2">
-        {CATEGORIES.map((cat) => (
+      <div className="flex flex-wrap gap-1.5 sm:gap-2">
+        {CATEGORIES_FILTRE.map((cat) => (
           <button
             key={cat}
             onClick={() => setFiltreCategorie(cat)}
             className={cn(
-              "rounded-lg px-3.5 py-2 text-sm font-medium transition-all duration-200",
+              "rounded-full px-3 py-1.5 text-xs font-medium transition-all duration-200 sm:px-3.5 sm:py-2 sm:text-sm",
               filtreCategorie === cat
-                ? "bg-white/10 text-white"
-                : "text-white/35 hover:bg-white/[0.04] hover:text-white/60"
+                ? "bg-violet-600/20 text-violet-300 ring-1 ring-violet-500/30"
+                : "bg-white/[0.03] text-white/40 hover:bg-white/[0.06] hover:text-white/60"
             )}
           >
-            {cat}
+            {cat === "toutes" ? "Toutes" : labelCategorie(cat)}
           </button>
         ))}
       </div>

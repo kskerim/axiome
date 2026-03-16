@@ -53,11 +53,18 @@ function AppContenu() {
       setUserId(uid);
       chargerDepuisDb();
     } else {
-      // deconnecte : revient aux donnees de simulation
+      // deconnecte : remet le store a zero
       setUserId(null);
       reinitialiser();
     }
   }, [utilisateur, setUserId, chargerDepuisDb, reinitialiser]);
+
+  // quand le mode simulation demarre, on s'assure que le store est vide
+  useEffect(() => {
+    if (modeSimulation && !utilisateur) {
+      reinitialiser();
+    }
+  }, [modeSimulation, utilisateur, reinitialiser]);
 
   // attend la verification de session
   if (chargement) return <ChargementInitial />;

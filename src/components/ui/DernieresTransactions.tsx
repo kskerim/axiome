@@ -1,6 +1,7 @@
 import type { Transaction } from "@/types";
 import { MerchantAvatar } from "./MerchantAvatar";
 import { formaterMontant } from "@/lib/calculs";
+import { labelCategorie } from "@/lib/categories";
 import { cn } from "@/lib/utils";
 import { InfoBulle } from "@/components/ui/InfoBulle";
 
@@ -48,7 +49,7 @@ export function DernieresTransactions({
                   month: "short",
                 })}
                 {" · "}
-                {tx.categorie}
+                {labelCategorie(tx.categorie)}
               </p>
             </div>
 
