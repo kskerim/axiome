@@ -12,6 +12,7 @@ import {
   ShieldAlert,
   Info,
 } from "lucide-react";
+import { InfoBulle } from "@/components/ui/InfoBulle";
 
 // icone selon le type d'alerte
 function IconeAlerte({ type }: { type: Alerte["type"] }) {
@@ -51,7 +52,7 @@ function labelType(type: Alerte["type"]): string {
     case "subscription_creep":
       return "Hausse d'abonnement";
     case "depassement_moyenne":
-      return "D\u00e9passement moyenne";
+      return "Dépassement moyenne";
     case "anomalie_montant":
       return "Anomalie montant";
     case "tendance_hausse":
@@ -142,11 +143,14 @@ function AiInsights() {
           <Brain size={22} className="text-violet-400" />
         </div>
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-white/90 lg:text-3xl">
-            Analyses IA
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-semibold tracking-tight text-white/90 lg:text-3xl">
+              Analyses IA
+            </h1>
+            <InfoBulle texte="Alertes générées automatiquement en analysant vos transactions : hausse d'abonnements, dépassements de budget, montants inhabituels et tendances à la hausse." />
+          </div>
           <p className="text-base text-white/35">
-            {alertes.length} alerte{alertes.length > 1 ? "s" : ""} d\u00e9tect\u00e9e
+            {alertes.length} alerte{alertes.length > 1 ? "s" : ""} détectée
             {alertes.length > 1 ? "s" : ""}
           </p>
         </div>
@@ -188,7 +192,7 @@ function AiInsights() {
       {alertes.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 text-white/25">
           <Brain size={48} strokeWidth={1} />
-          <p className="mt-4 text-base">Aucune anomalie d\u00e9tect\u00e9e</p>
+          <p className="mt-4 text-base">Aucune anomalie détectée</p>
         </div>
       )}
     </div>

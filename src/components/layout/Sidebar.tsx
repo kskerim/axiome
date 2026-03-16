@@ -6,9 +6,12 @@ import {
   X,
   RotateCcw,
   HardDrive,
+  LogOut,
+  Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAxiomeStore, getTailleStockage } from "@/store";
+import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
 // liens de navigation principaux
@@ -28,11 +31,17 @@ interface SidebarProps {
 export function Sidebar({ ouvert, onFermer }: SidebarProps) {
   const reinitialiser = useAxiomeStore((s) => s.reinitialiser);
   const tailleKo = getTailleStockage();
+  const { utilisateur, modeSimulation, deconnexion } = useAuth();
 
   // reinitialise les donnees et notifie
   const handleReset = () => {
     reinitialiser();
-    toast.success("Donnees reinitialises");
+    toast.success("Données réinitialisées");
+  };
+
+  // deconnexion ou sortie du mode simulation
+  const handleDeconnexion = async () => {
+    await deconnexion();
   };
 
   return (
@@ -64,6 +73,14 @@ export function Sidebar({ ouvert, onFermer }: SidebarProps) {
             <X size={18} />
           </button>
         </div>
+
+        {/* indicateur mode simulation */}
+        {modeSimulation && (
+          <div className="mx-4 mb-2 flex items-center gap-2 rounded-lg bg-amber-500/10 px-3 py-2">
+            <Zap size={14} className="text-amber-400" />
+            <span className="text-xs font-medium text-amber-400/80">Mode simulation</span>
+          </div>
+        )}
 
         {/* separateur subtil */}
         <div className="mx-4 h-px bg-white/[0.06]" />
@@ -98,8 +115,24 @@ export function Sidebar({ ouvert, onFermer }: SidebarProps) {
             className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-xs text-white/25 transition-colors hover:bg-white/[0.03] hover:text-white/50"
           >
             <RotateCcw size={14} />
-            <span>Reinitialiser les donnees</span>
+            <span>Réinitialiser les données</span>
           </button>
+
+          {/* bouton deconnexion */}
+          <button
+            onClick={handleDeconnexion}
+            className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-xs text-white/25 transition-colors hover:bg-red-500/10 hover:text-red-400"
+          >
+            <LogOut size={14} />
+            <span>{modeSimulation ? "Quitter la simulation" : "Se déconnecter"}</span>
+          </button>
+
+          {/* email utilisateur ou simulation */}
+          {utilisateur && (
+            <p className="truncate px-2 text-[10px] text-white/20">
+              {utilisateur.email}
+            </p>
+          )}
 
           {/* indicateur stockage */}
           <div className="flex items-center gap-2 px-2">

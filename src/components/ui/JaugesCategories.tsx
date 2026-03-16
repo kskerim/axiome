@@ -20,6 +20,7 @@ import {
 import { cn } from "@/lib/utils";
 import { formaterMontant } from "@/lib/calculs";
 import type { BudgetCategorie } from "@/lib/calculs";
+import { InfoBulle } from "@/components/ui/InfoBulle";
 
 // icone par categorie
 const ICONES: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
@@ -49,16 +50,16 @@ const LABELS: Record<string, string> = {
   automobile: "Automobile",
   logement: "Logement",
   loisirs: "Loisirs",
-  sante: "Sante",
+  sante: "Santé",
   restauration: "Restauration",
-  bar_cafe: "Bar / Cafe",
+  bar_cafe: "Bar / Café",
   abonnements: "Abonnements",
   shopping: "Shopping",
-  beaute: "Beaute",
+  beaute: "Beauté",
   animaux: "Animaux",
   maison: "Maison",
   cadeaux: "Cadeaux",
-  education: "Education",
+  education: "Éducation",
   voyage: "Voyage",
   divers: "Divers",
 };
@@ -96,8 +97,9 @@ export function JaugesCategories({ budgets }: JaugesCategoriesProps) {
           <h2 className="text-base font-medium tracking-widest text-white/40 uppercase">
             Budgets
           </h2>
+          <InfoBulle texte="Suivi de vos dépenses par catégorie par rapport au budget mensuel que vous avez défini. La jauge change de couleur quand vous approchez ou dépassez la limite." />
         </div>
-        <p className="text-sm text-white/30">aucune depense ce mois</p>
+        <p className="text-sm text-white/30">Aucune dépense ce mois</p>
       </div>
     );
   }
@@ -110,6 +112,7 @@ export function JaugesCategories({ budgets }: JaugesCategoriesProps) {
         <h2 className="text-base font-medium tracking-widest text-white/40 uppercase">
           Budgets
         </h2>
+        <InfoBulle texte="Suivi de vos dépenses par catégorie par rapport au budget mensuel que vous avez défini. La jauge change de couleur quand vous approchez ou dépassez la limite." />
       </div>
 
       {/* liste des jauges */}
@@ -159,7 +162,7 @@ export function JaugesCategories({ budgets }: JaugesCategoriesProps) {
               {/* indicateur de depassement */}
               {b.depasse && (
                 <p className="text-xs text-red-400/70">
-                  depassement de {formaterMontant(Math.abs(b.restant))}
+                  Dépassement de {formaterMontant(Math.abs(b.restant))}
                 </p>
               )}
             </div>

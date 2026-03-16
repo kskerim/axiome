@@ -2,6 +2,7 @@ import { TrendingDown, TrendingUp, CalendarClock, Repeat, ShoppingCart } from "l
 import { cn } from "@/lib/utils";
 import { formaterMontant } from "@/lib/calculs";
 import type { ProjectionFinMois as ProjectionData } from "@/lib/calculs";
+import { InfoBulle } from "@/components/ui/InfoBulle";
 
 // props du composant
 interface ProjectionFinMoisProps {
@@ -30,6 +31,7 @@ export function ProjectionFinMois({ projection }: ProjectionFinMoisProps) {
         <h2 className="text-base font-medium tracking-widest text-white/40 uppercase">
           Projection fin de mois
         </h2>
+        <InfoBulle texte="Estimation de votre solde en fin de mois, basée sur votre solde actuel moins les dépenses récurrentes à venir et une estimation des dépenses variables." />
       </div>
 
       {/* solde projete */}
@@ -66,7 +68,7 @@ export function ProjectionFinMois({ projection }: ProjectionFinMoisProps) {
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-2">
               <Repeat size={14} className="text-indigo-400/60" />
-              <span className="text-white/40">Recurrentes a venir</span>
+              <span className="text-white/40">Récurrentes à venir</span>
             </div>
             <span className="font-medium tabular-nums text-red-400/70">
               -{formaterMontant(depensesRecurrentesAVenir)}
@@ -79,7 +81,7 @@ export function ProjectionFinMois({ projection }: ProjectionFinMoisProps) {
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-2">
               <ShoppingCart size={14} className="text-amber-400/60" />
-              <span className="text-white/40">Variables estimees</span>
+              <span className="text-white/40">Variables estimées</span>
             </div>
             <span className="font-medium tabular-nums text-amber-400/70">
               -{formaterMontant(depensesEstimeesRestantes)}

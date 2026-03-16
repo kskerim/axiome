@@ -84,7 +84,7 @@ export const colonnesTransactions: ColumnDef<Transaction, unknown>[] = [
       row.original.isRecurring ? (
         <div className="flex items-center gap-1.5 text-indigo-400/70">
           <Repeat size={15} />
-          <span className="text-sm">recurrent</span>
+          <span className="text-sm">récurrent</span>
         </div>
       ) : (
         <span className="text-sm text-white/30">ponctuel</span>
@@ -105,7 +105,7 @@ function BoutonSuppression({ transaction }: { transaction: Transaction }) {
 
   const handleClick = () => {
     supprimer(transaction.id);
-    toast.success(`Transaction "${transaction.marchand}" supprim\u00e9e`);
+    toast.success(`Transaction "${transaction.marchand}" supprimée`);
   };
 
   return (

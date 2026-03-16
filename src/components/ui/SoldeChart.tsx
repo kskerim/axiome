@@ -9,6 +9,7 @@ import {
 } from "recharts";
 import type { PointSolde } from "@/lib/calculs";
 import { formaterMontant } from "@/lib/calculs";
+import { InfoBulle } from "@/components/ui/InfoBulle";
 
 // props du graphique d'evolution
 interface SoldeChartProps {
@@ -59,9 +60,12 @@ function CustomTooltip({
 export function SoldeChart({ donnees }: SoldeChartProps) {
   return (
     <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 sm:p-6">
-      <h2 className="mb-5 text-base font-medium tracking-widest text-white/40 uppercase sm:mb-6">
-        \u00c9volution du solde
-      </h2>
+      <div className="mb-5 flex items-center gap-2 sm:mb-6">
+        <h2 className="text-base font-medium tracking-widest text-white/40 uppercase">
+          Évolution du solde
+        </h2>
+        <InfoBulle texte="Graphique montrant l'évolution de votre solde, vos revenus et vos dépenses sur les 12 derniers mois." />
+      </div>
 
       <div className="h-64 w-full sm:h-80 lg:h-96">
         <ResponsiveContainer width="100%" height="100%">

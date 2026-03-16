@@ -2,6 +2,7 @@ import type { Transaction } from "@/types";
 import { MerchantAvatar } from "./MerchantAvatar";
 import { formaterMontant } from "@/lib/calculs";
 import { cn } from "@/lib/utils";
+import { InfoBulle } from "@/components/ui/InfoBulle";
 
 // props du composant dernieres transactions
 interface DernieresTransactionsProps {
@@ -18,9 +19,12 @@ export function DernieresTransactions({
 
   return (
     <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 sm:p-6">
-      <h2 className="mb-5 text-base font-medium tracking-widest text-white/40 uppercase sm:mb-6">
-        Derni\u00e8res transactions
-      </h2>
+      <div className="mb-5 flex items-center gap-2 sm:mb-6">
+        <h2 className="text-base font-medium tracking-widest text-white/40 uppercase">
+          Dernières transactions
+        </h2>
+        <InfoBulle texte="Vos transactions les plus récentes, triées par date." />
+      </div>
 
       <div className="space-y-1">
         {recentes.map((tx) => (

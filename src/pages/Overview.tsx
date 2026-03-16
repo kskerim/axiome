@@ -7,6 +7,7 @@ import {
   calculerProjectionFinMois,
 } from "@/lib/calculs";
 import { KpiCard } from "@/components/ui/KpiCard";
+import { InfoBulle } from "@/components/ui/InfoBulle";
 import { SoldeChart } from "@/components/ui/SoldeChart";
 import { DernieresTransactions } from "@/components/ui/DernieresTransactions";
 import { ResteAVivre } from "@/components/ui/ResteAVivre";
@@ -27,9 +28,12 @@ function Overview() {
     <div className="space-y-6 sm:space-y-8">
       {/* titre de page */}
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-white/90 lg:text-3xl">
-          Tableau de bord
-        </h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-semibold tracking-tight text-white/90 lg:text-3xl">
+            Tableau de bord
+          </h1>
+          <InfoBulle texte="Vue d'ensemble de vos finances : solde, revenus, dépenses, évolution mensuelle, budgets et projections." />
+        </div>
         <p className="mt-1 text-base text-white/35">
           Synthèse de vos finances personnelles
         </p>
@@ -48,7 +52,7 @@ function Overview() {
           variation={kpi.variationRevenus}
         />
         <KpiCard
-          label="depenses"
+          label="dépenses"
           montant={kpi.depenses}
           variation={kpi.variationDepenses}
           inverse

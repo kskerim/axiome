@@ -2,6 +2,11 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Transaction, CategorieTransaction } from "@/types";
 import { transactions as mockTransactions } from "@/data/mock-data";
+import {
+  chargerTransactions,
+  insererTransaction,
+  supprimerTransactionDb,
+} from "@/lib/transactions-db";
 
 // version du schema pour les migrations
 const STORE_VERSION = 2;
@@ -32,12 +37,17 @@ interface AxiomeState {
   transactions: Transaction[];
   budgets: Record<string, number>;
   filtreCategorie: CategorieTransaction | "toutes";
+  userId: string | null;
+  chargementDb: boolean;
   setFiltreCategorie: (categorie: CategorieTransaction | "toutes") => void;
   transactionsFiltrees: () => Transaction[];
   ajouterTransaction: (transaction: Transaction) => void;
   supprimerTransaction: (id: string) => void;
   setBudget: (categorie: string, montant: number) => void;
   reinitialiser: () => void;
+  // actions liees a supabase
+  setUserId: (id: string | null) => void;
+  chargerDepuisDb: () => Promise<void>;
 }
 
 // store principal zustand avec persistence localStorage
@@ -47,6 +57,8 @@ export const useAxiomeStore = create<AxiomeState>()(
       transactions: mockTransactions,
       budgets: BUDGETS_DEFAUT,
       filtreCategorie: "toutes",
+      userId: null,
+      chargementDb: false,
 
       // met a jour le filtre de categorie actif
       setFiltreCategorie: (categorie) => set({ filtreCategorie: categorie }),
@@ -58,19 +70,37 @@ export const useAxiomeStore = create<AxiomeState>()(
         return transactions.filter((t) => t.categorie === filtreCategorie);
       },
 
-      // ajoute une transaction et retrie par date decroissante
-      ajouterTransaction: (transaction) =>
+      // ajoute une transaction (+ supabase si connecte)
+      ajouterTransaction: (transaction) => {
+        const { userId } = get();
+
+        // mise a jour locale immediate
         set((state) => ({
           transactions: [transaction, ...state.transactions].sort(
             (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
           ),
-        })),
+        }));
 
-      // supprime une transaction par son id
-      supprimerTransaction: (id) =>
+        // si connecte, ecrit aussi en base
+        if (userId) {
+          insererTransaction(userId, transaction);
+        }
+      },
+
+      // supprime une transaction (+ supabase si connecte)
+      supprimerTransaction: (id) => {
+        const { userId } = get();
+
+        // suppression locale immediate
         set((state) => ({
           transactions: state.transactions.filter((t) => t.id !== id),
-        })),
+        }));
+
+        // si connecte, supprime aussi en base
+        if (userId) {
+          supprimerTransactionDb(id);
+        }
+      },
 
       // met a jour le budget d'une categorie
       setBudget: (categorie, montant) =>
@@ -78,15 +108,32 @@ export const useAxiomeStore = create<AxiomeState>()(
           budgets: { ...state.budgets, [categorie]: montant },
         })),
 
-      // reinitialise avec les donnees mock
+      // reinitialise avec les donnees mock (mode simulation)
       reinitialiser: () =>
-        set({ transactions: mockTransactions, budgets: BUDGETS_DEFAUT, filtreCategorie: "toutes" }),
+        set({
+          transactions: mockTransactions,
+          budgets: BUDGETS_DEFAUT,
+          filtreCategorie: "toutes",
+        }),
+
+      // definit l'id utilisateur pour activer la sync supabase
+      setUserId: (id) => set({ userId: id }),
+
+      // charge les transactions depuis supabase
+      chargerDepuisDb: async () => {
+        set({ chargementDb: true });
+        const transactions = await chargerTransactions();
+        set({ transactions, chargementDb: false });
+      },
     }),
     {
       name: "axiome-store",
       version: STORE_VERSION,
-      // persiste les transactions et les budgets
-      partialize: (state) => ({ transactions: state.transactions, budgets: state.budgets }),
+      // persiste les transactions et les budgets (pas userId ni chargementDb)
+      partialize: (state) => ({
+        transactions: state.transactions,
+        budgets: state.budgets,
+      }),
       // migration entre versions du schema
       migrate: (persisted, version) => {
         const state = persisted as Record<string, unknown>;

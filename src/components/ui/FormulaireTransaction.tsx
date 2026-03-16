@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import type { CategorieTransaction } from "@/types";
 import { useAxiomeStore } from "@/store";
+import { verifierDepassementBudget } from "@/hooks/useAlerteBudget";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { Button } from "@/components/ui/Button";
@@ -45,16 +46,16 @@ const CATEGORIES_DEPENSES: {
   { value: "automobile", label: "Automobile", icon: Fuel },
   { value: "logement", label: "Logement", icon: Home },
   { value: "loisirs", label: "Loisirs", icon: Gamepad2 },
-  { value: "sante", label: "Sante", icon: HeartPulse },
+  { value: "sante", label: "Santé", icon: HeartPulse },
   { value: "restauration", label: "Restauration", icon: UtensilsCrossed },
-  { value: "bar_cafe", label: "Bar / Cafe", icon: Coffee },
+  { value: "bar_cafe", label: "Bar / Café", icon: Coffee },
   { value: "abonnements", label: "Abonnements", icon: CreditCard },
   { value: "shopping", label: "Shopping", icon: ShoppingBag },
-  { value: "beaute", label: "Beaute", icon: Scissors },
+  { value: "beaute", label: "Beauté", icon: Scissors },
   { value: "animaux", label: "Animaux", icon: PawPrint },
   { value: "maison", label: "Maison", icon: Wrench },
   { value: "cadeaux", label: "Cadeaux", icon: Gift },
-  { value: "education", label: "Education", icon: GraduationCap },
+  { value: "education", label: "Éducation", icon: GraduationCap },
   { value: "voyage", label: "Voyage", icon: Plane },
   { value: "divers", label: "Divers", icon: CircleDot },
 ];
@@ -66,7 +67,7 @@ const CATEGORIES_REVENUS: {
   icon: React.ComponentType<{ size?: number }>;
 }[] = [
   { value: "revenus", label: "Revenus", icon: Banknote },
-  { value: "epargne", label: "Epargne", icon: PiggyBank },
+  { value: "epargne", label: "Épargne", icon: PiggyBank },
 ];
 
 // schema de validation zod
@@ -132,8 +133,14 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
 
     const signe = data.estRevenu ? "+" : "-";
     toast.success(
-      `${data.estRevenu ? "Revenu" : "Depense"} "${data.marchand}" (${signe}${data.montant.toFixed(2)} EUR)`
+      `${data.estRevenu ? "Revenu" : "Dépense"} "${data.marchand}" (${signe}${data.montant.toFixed(2)} EUR)`
     );
+
+    // verifie le depassement de budget pour les depenses
+    if (!data.estRevenu) {
+      setTimeout(() => verifierDepassementBudget(data.categorie), 300);
+    }
+
     reset();
     onSucces?.();
   };
@@ -161,7 +168,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
               )}
             >
               <ArrowDownCircle size={18} />
-              Depense
+              Dépense
             </button>
             <button
               type="button"
@@ -241,7 +248,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
 
       {/* grille de categories */}
       <div className="space-y-2">
-        <Label>Categorie</Label>
+        <Label>Catégorie</Label>
         <Controller
           name="categorie"
           control={control}
@@ -307,7 +314,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
                   "text-sm font-medium",
                   field.value ? "text-indigo-300" : "text-white/50"
                 )}>
-                  Depense recurrente (mensuelle)
+                  Dépense récurrente (mensuelle)
                 </span>
               </div>
             </button>
@@ -320,7 +327,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
         <div className="flex items-center gap-2 rounded-lg bg-indigo-500/[0.04] px-3 py-2">
           <Repeat size={14} className="text-indigo-400/70" />
           <p className="text-xs text-indigo-300/60">
-            sera deduite automatiquement chaque mois pour les previsions
+            sera déduite automatiquement chaque mois pour les prévisions
           </p>
         </div>
       )}
@@ -336,7 +343,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
             : "bg-white/90 text-black hover:bg-white/80"
         )}
       >
-        {estRevenu ? "Ajouter ce revenu" : "Ajouter cette depense"}
+        {estRevenu ? "Ajouter ce revenu" : "Ajouter cette dépense"}
       </Button>
     </form>
   );

@@ -70,7 +70,7 @@ function detecterSubscriptionCreep(transactions: Transaction[]): Alerte[] {
         id: genId(),
         type: "subscription_creep",
         severite: variationPourcent > 20 ? "critique" : "attention",
-        message: `l'abonnement "${marchand}" est passe de ${premier.toFixed(2)} a ${dernier.toFixed(2)} (+${augmentation}) sur ${recurrents.length} mois`,
+        message: `l'abonnement "${marchand}" est passé de ${premier.toFixed(2)} à ${dernier.toFixed(2)} (+${augmentation}) sur ${recurrents.length} mois`,
         marchand,
         categorie: "abonnements",
         variation: variationPourcent,
@@ -105,7 +105,7 @@ function detecterDepassementMoyenne(transactions: Transaction[]): Alerte[] {
         id: genId(),
         type: "depassement_moyenne",
         severite: depassement > 60 ? "critique" : "attention",
-        message: `les depenses en "${categorie}" depassent la moyenne de ${depassement.toFixed(0)}% ce mois-ci (${dernierMois.toFixed(0)} vs ${moyenne.toFixed(0)} en moyenne)`,
+        message: `les dépenses en "${categorie}" dépassent la moyenne de ${depassement.toFixed(0)}% ce mois-ci (${dernierMois.toFixed(0)} vs ${moyenne.toFixed(0)} en moyenne)`,
         categorie,
         variation: depassement,
       });
@@ -185,7 +185,7 @@ function detecterTendancesHausse(transactions: Transaction[]): Alerte[] {
         id: genId(),
         type: "tendance_hausse",
         severite: hausse > 50 ? "attention" : "info",
-        message: `les depenses en "${categorie}" sont en hausse continue depuis 4 mois (+${hausse.toFixed(0)}%)`,
+        message: `les dépenses en "${categorie}" sont en hausse continue depuis 4 mois (+${hausse.toFixed(0)}%)`,
         categorie,
         variation: hausse,
       });

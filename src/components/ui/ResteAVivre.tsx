@@ -2,6 +2,7 @@ import { Wallet, Home, CreditCard, PiggyBank } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formaterMontant } from "@/lib/calculs";
 import type { ResteAVivreData } from "@/lib/calculs";
+import { InfoBulle } from "@/components/ui/InfoBulle";
 
 // icone par categorie de charge fixe
 const ICONES_FIXES: Record<string, React.ReactNode> = {
@@ -41,8 +42,9 @@ export function ResteAVivre({ donnees }: ResteAVivreProps) {
       <div className="mb-5 flex items-center gap-2.5 sm:mb-6">
         <Wallet size={20} className="text-white/40" />
         <h2 className="text-base font-medium tracking-widest text-white/40 uppercase">
-          Reste \u00e0 vivre
+          Reste à vivre
         </h2>
+        <InfoBulle texte="Ce qu'il vous reste après déduction de vos charges fixes (logement, abonnements, épargne). C'est votre budget disponible pour les dépenses variables." />
       </div>
 
       {/* montant principal */}
@@ -56,7 +58,7 @@ export function ResteAVivre({ donnees }: ResteAVivreProps) {
       {/* barre de progression */}
       <div className="mt-5">
         <div className="mb-2 flex items-center justify-between text-sm">
-          <span className="text-white/45">Consomm\u00e9</span>
+          <span className="text-white/45">Consommé</span>
           <span className="font-medium text-white/65">
             {pourcentageConsomme}%
           </span>

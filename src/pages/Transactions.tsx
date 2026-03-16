@@ -3,6 +3,7 @@ import type { CategorieTransaction } from "@/types";
 import { DataTable } from "@/components/ui/DataTable";
 import { colonnesTransactions } from "@/components/ui/colonnes-transactions";
 import { cn } from "@/lib/utils";
+import { InfoBulle } from "@/components/ui/InfoBulle";
 
 // liste des categories pour le filtre
 const CATEGORIES: Array<CategorieTransaction | "toutes"> = [
@@ -38,9 +39,12 @@ function Transactions() {
     <div className="space-y-6 sm:space-y-8">
       {/* titre */}
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-white/90 lg:text-3xl">
-          Transactions
-        </h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-semibold tracking-tight text-white/90 lg:text-3xl">
+            Transactions
+          </h1>
+          <InfoBulle texte="Liste de toutes vos transactions. Utilisez les filtres par catégorie pour affiner la vue. Cliquez sur les colonnes pour trier." />
+        </div>
         <p className="mt-1 text-base text-white/35">
           Historique complet de vos opérations
         </p>
