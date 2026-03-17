@@ -1,9 +1,10 @@
-import { lazy, Suspense, useEffect, useRef } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "sonner";
 import { AppShell } from "@/components/layout/AppShell";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { useAxiomeStore } from "@/store";
+import { useDeconnexionAuto } from "@/hooks/useDeconnexionAuto";
 import { Accueil } from "@/pages/Accueil";
 
 // lazy-load des pages pour reduire le bundle initial
@@ -34,7 +35,7 @@ function ChargementInitial() {
 
 // contenu de l'app : redirige vers l'accueil si pas connecte
 function AppContenu() {
-  const { utilisateur, modeSimulation, chargement } = useAuth();
+  const { utilisateur, modeSimulation, chargement, deconnexion } = useAuth();
   const setUserId = useAxiomeStore((s) => s.setUserId);
   const chargerDepuisDb = useAxiomeStore((s) => s.chargerDepuisDb);
   const reinitialiser = useAxiomeStore((s) => s.reinitialiser);
@@ -65,6 +66,19 @@ function AppContenu() {
       reinitialiser();
     }
   }, [modeSimulation, utilisateur, reinitialiser]);
+
+  // deconnexion automatique apres 15 minutes d'inactivite
+  const handleInactivite = useCallback(() => {
+    if (utilisateur) {
+      deconnexion();
+    } else if (modeSimulation) {
+      reinitialiser();
+      // recharge la page pour revenir a l'accueil proprement
+      window.location.reload();
+    }
+  }, [utilisateur, modeSimulation, deconnexion, reinitialiser]);
+
+  useDeconnexionAuto(handleInactivite, !!utilisateur || modeSimulation);
 
   // attend la verification de session
   if (chargement) return <ChargementInitial />;

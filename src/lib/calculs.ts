@@ -114,7 +114,7 @@ export function calculerEvolutionMensuelle(
 }
 
 // categories considerees comme charges fixes
-const CATEGORIES_FIXES = ["logement", "abonnements", "epargne"] as const;
+const CATEGORIES_FIXES = ["loyer", "electricite", "eau", "gaz", "forfait_tel", "box_internet", "assurances", "abonnements", "epargne"] as const;
 
 // categories considerees comme revenus
 const CATEGORIES_REVENUS = ["revenus"] as const;
@@ -147,7 +147,7 @@ export function calculerResteAVivre(transactions: Transaction[]): ResteAVivreDat
     .filter((t) => (CATEGORIES_REVENUS as readonly string[]).includes(t.categorie))
     .reduce((acc, t) => acc + Math.abs(t.montant), 0);
 
-  // charges fixes du mois (logement, abonnements, epargne)
+  // charges fixes du mois (loyer, factures, abonnements, epargne)
   const txFixes = txMois.filter(
     (t) => (CATEGORIES_FIXES as readonly string[]).includes(t.categorie) && t.montant < 0
   );
@@ -269,92 +269,3 @@ export function calculerBudgetsCategorie(
   return resultats.sort((a, b) => b.pourcentage - a.pourcentage);
 }
 
-// donnees de la projection fin de mois
-export interface ProjectionFinMois {
-  soldeActuel: number;
-  revenusRestants: number;
-  depensesRecurrentesAVenir: number;
-  soldeProjecte: number;
-  joursRestants: number;
-  depensesMoyennesJour: number;
-  depensesEstimeesRestantes: number;
-}
-
-// projette le solde en fin de mois
-export function calculerProjectionFinMois(
-  transactions: Transaction[]
-): ProjectionFinMois {
-  const maintenant = new Date();
-  const moisActuel = maintenant.getMonth();
-  const anneeActuelle = maintenant.getFullYear();
-  const jourActuel = maintenant.getDate();
-
-  // dernier jour du mois
-  const dernierJour = new Date(anneeActuelle, moisActuel + 1, 0).getDate();
-  const joursRestants = Math.max(0, dernierJour - jourActuel);
-  const joursPasses = jourActuel;
-
-  // transactions du mois en cours
-  const txMois = transactions.filter((t) => {
-    const d = new Date(t.date);
-    return d.getMonth() === moisActuel && d.getFullYear() === anneeActuelle;
-  });
-
-  // solde total actuel
-  const soldeActuel = transactions.reduce((acc, t) => acc + t.montant, 0);
-
-  // depenses variables du mois (hors recurrentes)
-  const depensesVariables = Math.abs(
-    txMois
-      .filter((t) => t.montant < 0 && !t.isRecurring)
-      .reduce((acc, t) => acc + t.montant, 0)
-  );
-
-  // moyenne journaliere des depenses variables
-  const depensesMoyennesJour = joursPasses > 0 ? depensesVariables / joursPasses : 0;
-
-  // estimation des depenses variables restantes
-  const depensesEstimeesRestantes = depensesMoyennesJour * joursRestants;
-
-  // depenses recurrentes du mois deja passees
-  const recurrentesPassees = txMois.filter((t) => t.montant < 0 && t.isRecurring);
-
-  // on cherche les recurrentes qui n'ont pas encore ete debitees ce mois
-  // on se base sur les recurrentes historiques du mois precedent
-  const moisPrec = moisActuel === 0 ? 11 : moisActuel - 1;
-  const anneePrec = moisActuel === 0 ? anneeActuelle - 1 : anneeActuelle;
-  const recurrentesPrec = transactions.filter((t) => {
-    const d = new Date(t.date);
-    return (
-      d.getMonth() === moisPrec &&
-      d.getFullYear() === anneePrec &&
-      t.montant < 0 &&
-      t.isRecurring
-    );
-  });
-
-  // marchands recurrents deja debites ce mois
-  const marchandsDebites = new Set(
-    recurrentesPassees.map((t) => t.marchand.toLowerCase())
-  );
-
-  // montant des recurrentes attendues mais pas encore debitees
-  const depensesRecurrentesAVenir = Math.abs(
-    recurrentesPrec
-      .filter((t) => !marchandsDebites.has(t.marchand.toLowerCase()))
-      .reduce((acc, t) => acc + t.montant, 0)
-  );
-
-  // projection : solde actuel - recurrentes a venir - depenses variables estimees
-  const soldeProjecte = soldeActuel - depensesRecurrentesAVenir - depensesEstimeesRestantes;
-
-  return {
-    soldeActuel: Math.round(soldeActuel),
-    revenusRestants: 0,
-    depensesRecurrentesAVenir: Math.round(depensesRecurrentesAVenir),
-    soldeProjecte: Math.round(soldeProjecte),
-    joursRestants,
-    depensesMoyennesJour: Math.round(depensesMoyennesJour),
-    depensesEstimeesRestantes: Math.round(depensesEstimeesRestantes),
-  };
-}

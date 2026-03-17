@@ -1,12 +1,19 @@
-import { Wallet, Home, CreditCard, PiggyBank } from "lucide-react";
+import { Wallet, Home, CreditCard, PiggyBank, Zap, Droplets, Flame, Smartphone, Wifi, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formaterMontant } from "@/lib/calculs";
 import type { ResteAVivreData } from "@/lib/calculs";
 import { InfoBulle } from "@/components/ui/InfoBulle";
+import { labelCategorie } from "@/lib/categories";
 
 // icone par categorie de charge fixe
 const ICONES_FIXES: Record<string, React.ReactNode> = {
-  logement: <Home size={18} />,
+  loyer: <Home size={18} />,
+  electricite: <Zap size={18} />,
+  eau: <Droplets size={18} />,
+  gaz: <Flame size={18} />,
+  forfait_tel: <Smartphone size={18} />,
+  box_internet: <Wifi size={18} />,
+  assurances: <Shield size={18} />,
   abonnements: <CreditCard size={18} />,
   epargne: <PiggyBank size={18} />,
 };
@@ -44,14 +51,14 @@ export function ResteAVivre({ donnees }: ResteAVivreProps) {
         <h2 className="text-base font-medium tracking-widest text-white/40 uppercase">
           Reste à vivre
         </h2>
-        <InfoBulle texte="Ce qu'il vous reste après déduction de vos charges fixes (logement, abonnements, épargne). C'est votre budget disponible pour les dépenses variables." />
+        <InfoBulle texte="Ce qu'il vous reste apres deduction de vos charges fixes (loyer, factures, abonnements, epargne). C'est votre budget disponible pour les depenses variables." />
       </div>
 
       {/* montant principal */}
-      <p className={cn("text-3xl font-semibold tracking-tight sm:text-4xl", couleurTexte)}>
+      <p className={cn("text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl", couleurTexte)}>
         {formaterMontant(resteAVivre)}
       </p>
-      <p className="mt-1.5 text-sm text-white/35">
+      <p className="mt-1 text-xs text-white/35 sm:mt-1.5 sm:text-sm">
         sur {formaterMontant(budgetDisponible)} disponible
       </p>
 
@@ -90,9 +97,9 @@ export function ResteAVivre({ donnees }: ResteAVivreProps) {
                 <span className="text-white/35">
                   {ICONES_FIXES[item.categorie] ?? <CreditCard size={18} />}
                 </span>
-                <span className="text-base text-white/55">{item.categorie}</span>
+                <span className="text-sm text-white/55 sm:text-base">{labelCategorie(item.categorie)}</span>
               </div>
-              <span className="text-base font-medium tabular-nums text-white/70">
+              <span className="text-sm font-medium tabular-nums text-white/70 sm:text-base">
                 -{formaterMontant(item.montant)}
               </span>
             </div>

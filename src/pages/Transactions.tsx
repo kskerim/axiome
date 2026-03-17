@@ -27,13 +27,13 @@ function Transactions() {
       </div>
 
       {/* filtres par categorie */}
-      <div className="flex flex-wrap gap-1.5 sm:gap-2">
+      <div className="flex flex-wrap gap-1 sm:gap-1.5">
         {CATEGORIES_FILTRE.map((cat) => (
           <button
             key={cat}
             onClick={() => setFiltreCategorie(cat)}
             className={cn(
-              "rounded-full px-3 py-1.5 text-xs font-medium transition-all duration-200 sm:px-3.5 sm:py-2 sm:text-sm",
+              "rounded-full px-2 py-1 text-[11px] font-medium transition-colors sm:px-3.5 sm:py-1.5 sm:text-sm",
               filtreCategorie === cat
                 ? "bg-violet-600/20 text-violet-300 ring-1 ring-violet-500/30"
                 : "bg-white/[0.03] text-white/40 hover:bg-white/[0.06] hover:text-white/60"

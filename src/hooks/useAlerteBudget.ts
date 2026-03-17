@@ -3,25 +3,7 @@ import { useAxiomeStore } from "@/store";
 import { calculerBudgetsCategorie } from "@/lib/calculs";
 
 // labels en francais pour les categories
-const LABELS_CATEGORIES: Record<string, string> = {
-  alimentation: "Alimentation",
-  transport: "Transport",
-  automobile: "Automobile",
-  logement: "Logement",
-  loisirs: "Loisirs",
-  sante: "Santé",
-  restauration: "Restauration",
-  bar_cafe: "Bar / Café",
-  abonnements: "Abonnements",
-  shopping: "Shopping",
-  beaute: "Beauté",
-  animaux: "Animaux",
-  maison: "Maison",
-  cadeaux: "Cadeaux",
-  education: "Éducation",
-  voyage: "Voyage",
-  divers: "Divers",
-};
+import { labelCategorie } from "@/lib/categories";
 
 // verifie si une categorie a depasse son budget et affiche un toast
 export function verifierDepassementBudget(categorie: string): void {
@@ -31,7 +13,7 @@ export function verifierDepassementBudget(categorie: string): void {
   const budgetCat = resultats.find((b) => b.categorie === categorie);
   if (!budgetCat) return;
 
-  const label = LABELS_CATEGORIES[categorie] ?? categorie;
+  const label = labelCategorie(categorie) ?? categorie;
 
   // alerte si le budget est depasse
   if (budgetCat.depasse) {

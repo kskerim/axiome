@@ -5,7 +5,13 @@ const LABELS: Record<CategorieTransaction, string> = {
   alimentation: "Alimentation",
   transport: "Transport",
   automobile: "Automobile",
-  logement: "Logement",
+  loyer: "Loyer",
+  electricite: "Electricite",
+  eau: "Eau",
+  gaz: "Gaz",
+  forfait_tel: "Forfait tel",
+  box_internet: "Box internet",
+  assurances: "Assurances",
   loisirs: "Loisirs",
   sante: "Sante",
   restauration: "Restauration",
@@ -28,13 +34,19 @@ export function labelCategorie(cat: string): string {
   return LABELS[cat as CategorieTransaction] ?? cat;
 }
 
-// liste ordonnee des categories de depense pour les filtres
+// liste ordonnee des categories pour les filtres
 export const CATEGORIES_FILTRE: Array<CategorieTransaction | "toutes"> = [
   "toutes",
   "alimentation",
   "transport",
   "automobile",
-  "logement",
+  "loyer",
+  "electricite",
+  "eau",
+  "gaz",
+  "forfait_tel",
+  "box_internet",
+  "assurances",
   "loisirs",
   "sante",
   "restauration",

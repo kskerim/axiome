@@ -67,11 +67,11 @@ export function SoldeChart({ donnees }: SoldeChartProps) {
         <InfoBulle texte="Graphique montrant l'évolution de votre solde, vos revenus et vos dépenses sur les 12 derniers mois." />
       </div>
 
-      <div className="h-64 w-full sm:h-80 lg:h-96">
+      <div className="h-52 w-full sm:h-80 lg:h-96">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={donnees}
-            margin={{ top: 5, right: 5, left: -20, bottom: 0 }}
+            margin={{ top: 5, right: 5, left: -25, bottom: 0 }}
           >
             <defs>
               <linearGradient id="gradientSolde" x1="0" y1="0" x2="0" y2="1">
@@ -94,14 +94,16 @@ export function SoldeChart({ donnees }: SoldeChartProps) {
               dataKey="mois"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 12 }}
+              tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 10 }}
               dy={10}
+              interval="preserveStartEnd"
             />
 
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "rgba(255,255,255,0.25)", fontSize: 12 }}
+              tick={{ fill: "rgba(255,255,255,0.25)", fontSize: 10 }}
+              width={40}
               tickFormatter={(v: number) => `${(v / 1000).toFixed(0)}k`}
             />
 

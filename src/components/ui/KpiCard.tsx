@@ -25,7 +25,7 @@ export function KpiCard({ label, montant, variation, inverse = false }: KpiCardP
   const estNeutre = Math.abs(variation) < 0.5;
 
   return (
-    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5 transition-colors hover:bg-white/[0.04] sm:p-6 lg:p-7">
+    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 transition-colors hover:bg-white/[0.04] sm:p-5 lg:p-7">
       {/* label */}
       <div className="flex items-center gap-1.5">
         <p className="text-xs font-medium tracking-widest text-white/40 uppercase sm:text-sm">
@@ -35,22 +35,22 @@ export function KpiCard({ label, montant, variation, inverse = false }: KpiCardP
       </div>
 
       {/* montant principal */}
-      <p className="mt-3 text-2xl font-semibold tracking-tight text-white/90 sm:text-3xl lg:text-4xl">
+      <p className="mt-2 text-xl font-semibold tracking-tight text-white/90 sm:mt-3 sm:text-3xl lg:text-4xl">
         {formaterMontant(montant)}
       </p>
 
       {/* variation */}
-      <div className="mt-3 flex items-center gap-2">
+      <div className="mt-2 flex items-center gap-1.5 sm:mt-3 sm:gap-2">
         {estNeutre ? (
-          <Minus size={16} className="text-white/30" />
+          <Minus size={14} className="text-white/30 sm:h-4 sm:w-4" />
         ) : estPositif ? (
-          <TrendingUp size={16} className="text-emerald-400" />
+          <TrendingUp size={14} className="text-emerald-400 sm:h-4 sm:w-4" />
         ) : (
-          <TrendingDown size={16} className="text-red-400" />
+          <TrendingDown size={14} className="text-red-400 sm:h-4 sm:w-4" />
         )}
         <span
           className={cn(
-            "text-sm font-medium",
+            "text-xs font-medium sm:text-sm",
             estNeutre
               ? "text-white/30"
               : estPositif
@@ -60,7 +60,7 @@ export function KpiCard({ label, montant, variation, inverse = false }: KpiCardP
         >
           {formaterVariation(variation)}
         </span>
-        <span className="text-sm text-white/25">vs mois dernier</span>
+        <span className="hidden text-sm text-white/25 sm:inline">vs mois dernier</span>
       </div>
     </div>
   );

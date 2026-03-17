@@ -73,32 +73,38 @@ export function DataTable<TData>({
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id} className="border-b border-white/[0.06]">
-                  {headerGroup.headers.map((header) => (
-                    <th
-                      key={header.id}
-                      className="px-3 py-3 text-left text-xs font-medium tracking-widest text-white/35 uppercase sm:px-5 sm:py-4 sm:text-sm"
-                    >
-                      {header.isPlaceholder ? null : (
-                        <button
-                          className={cn(
-                            "flex items-center gap-1.5",
-                            header.column.getCanSort()
-                              ? "cursor-pointer select-none hover:text-white/60"
-                              : ""
-                          )}
-                          onClick={header.column.getToggleSortingHandler()}
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                          {header.column.getCanSort() && (
-                            <ArrowUpDown size={12} className="text-white/20" />
-                          )}
-                        </button>
-                      )}
-                    </th>
-                  ))}
+                  {headerGroup.headers.map((header) => {
+                    const hidden = (header.column.columnDef.meta as { hiddenMobile?: boolean })?.hiddenMobile;
+                    return (
+                      <th
+                        key={header.id}
+                        className={cn(
+                          "px-2 py-2.5 text-left text-xs font-medium tracking-widest text-white/35 uppercase sm:px-5 sm:py-4 sm:text-sm",
+                          hidden && "hidden sm:table-cell"
+                        )}
+                      >
+                        {header.isPlaceholder ? null : (
+                          <button
+                            className={cn(
+                              "flex items-center gap-1.5",
+                              header.column.getCanSort()
+                                ? "cursor-pointer select-none hover:text-white/60"
+                                : ""
+                            )}
+                            onClick={header.column.getToggleSortingHandler()}
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            {header.column.getCanSort() && (
+                              <ArrowUpDown size={12} className="text-white/20" />
+                            )}
+                          </button>
+                        )}
+                      </th>
+                    );
+                  })}
                 </tr>
               ))}
             </thead>
@@ -109,21 +115,30 @@ export function DataTable<TData>({
                     key={row.id}
                     className="border-b border-white/[0.03] transition-colors hover:bg-white/[0.02]"
                   >
-                    {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className="px-3 py-3 sm:px-5 sm:py-4">
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
+                    {row.getVisibleCells().map((cell) => {
+                      const hidden = (cell.column.columnDef.meta as { hiddenMobile?: boolean })?.hiddenMobile;
+                      return (
+                        <td
+                          key={cell.id}
+                          className={cn(
+                            "px-2 py-2.5 sm:px-5 sm:py-4",
+                            hidden && "hidden sm:table-cell"
+                          )}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      );
+                    })}
                   </tr>
                 ))
               ) : (
                 <tr>
                   <td
                     colSpan={colonnes.length}
-                    className="px-4 py-12 text-center text-base text-white/30"
+                    className="px-4 py-12 text-center text-sm text-white/30 sm:text-base"
                   >
                     aucune transaction trouvee
                   </td>
@@ -136,12 +151,12 @@ export function DataTable<TData>({
 
       {/* pagination */}
       <div className="flex items-center justify-between px-1">
-        <p className="text-sm text-white/35">
+        <p className="text-xs text-white/35 sm:text-sm">
           {table.getFilteredRowModel().rows.length} transaction
           {table.getFilteredRowModel().rows.length > 1 ? "s" : ""}
         </p>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1">
           <BoutonPagination
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
@@ -155,7 +170,7 @@ export function DataTable<TData>({
             <ChevronLeft size={14} />
           </BoutonPagination>
 
-          <span className="px-3 text-sm text-white/50">
+          <span className="px-2 text-xs text-white/50 sm:px-3 sm:text-sm">
             {table.getState().pagination.pageIndex + 1} / {table.getPageCount()}
           </span>
 
@@ -192,7 +207,7 @@ function BoutonPagination({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        "rounded-md p-2 transition-colors",
+        "rounded-md p-1.5 transition-colors sm:p-2",
         disabled
           ? "text-white/10 cursor-not-allowed"
           : "text-white/40 hover:bg-white/[0.06] hover:text-white/70"

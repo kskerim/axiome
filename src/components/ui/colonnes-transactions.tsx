@@ -16,15 +16,16 @@ export const colonnesTransactions: ColumnDef<Transaction, unknown>[] = [
     cell: ({ row }) => {
       const tx = row.original;
       return (
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <MerchantAvatar
             marchand={tx.marchand}
             categorie={tx.categorie}
-            taille={38}
+            taille={32}
+            className="shrink-0 sm:h-[38px] sm:w-[38px]"
           />
-          <div>
-            <p className="text-base font-medium text-white/80">{tx.marchand}</p>
-          </div>
+          <p className="truncate text-sm font-medium text-white/80 sm:text-base">
+            {tx.marchand}
+          </p>
         </div>
       );
     },
@@ -35,11 +36,10 @@ export const colonnesTransactions: ColumnDef<Transaction, unknown>[] = [
     cell: ({ row }) => {
       const date = new Date(row.original.date);
       return (
-        <span className="text-base text-white/55">
+        <span className="text-sm text-white/55 sm:text-base">
           {date.toLocaleDateString("fr-FR", {
             day: "numeric",
             month: "short",
-            year: "2-digit",
           })}
         </span>
       );
@@ -50,8 +50,9 @@ export const colonnesTransactions: ColumnDef<Transaction, unknown>[] = [
   {
     accessorKey: "categorie",
     header: "Categorie",
+    meta: { hiddenMobile: true },
     cell: ({ row }) => (
-      <span className="rounded-md bg-white/[0.05] px-2.5 py-1 text-sm font-medium text-white/55">
+      <span className="rounded-md bg-white/[0.05] px-2 py-0.5 text-xs font-medium text-white/55 sm:px-2.5 sm:py-1 sm:text-sm">
         {labelCategorie(row.original.categorie)}
       </span>
     ),
@@ -68,7 +69,7 @@ export const colonnesTransactions: ColumnDef<Transaction, unknown>[] = [
       return (
         <span
           className={cn(
-            "text-base font-medium tabular-nums",
+            "text-sm font-medium tabular-nums sm:text-base",
             montant >= 0 ? "text-emerald-400" : "text-white/70"
           )}
         >
@@ -81,6 +82,7 @@ export const colonnesTransactions: ColumnDef<Transaction, unknown>[] = [
   {
     accessorKey: "isRecurring",
     header: "Type",
+    meta: { hiddenMobile: true },
     cell: ({ row }) =>
       row.original.isRecurring ? (
         <div className="flex items-center gap-1.5 text-indigo-400/70">
@@ -106,16 +108,16 @@ function BoutonSuppression({ transaction }: { transaction: Transaction }) {
 
   const handleClick = () => {
     supprimer(transaction.id);
-    toast.success(`Transaction "${transaction.marchand}" supprimée`);
+    toast.success(`Transaction "${transaction.marchand}" supprimee`);
   };
 
   return (
     <button
       onClick={handleClick}
-      className="rounded-md p-2 text-white/20 transition-colors hover:bg-red-500/10 hover:text-red-400"
+      className="rounded-md p-1.5 text-white/20 transition-colors hover:bg-red-500/10 hover:text-red-400 sm:p-2"
       title="supprimer"
     >
-      <Trash2 size={16} />
+      <Trash2 size={15} />
     </button>
   );
 }

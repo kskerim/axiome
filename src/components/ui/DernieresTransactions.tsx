@@ -36,14 +36,15 @@ export function DernieresTransactions({
             <MerchantAvatar
               marchand={tx.marchand}
               categorie={tx.categorie}
-              taille={40}
+              taille={34}
+              className="shrink-0"
             />
 
             <div className="flex-1 min-w-0">
-              <p className="truncate text-base font-medium text-white/80">
+              <p className="truncate text-sm font-medium text-white/80 sm:text-base">
                 {tx.marchand}
               </p>
-              <p className="text-sm text-white/35">
+              <p className="text-xs text-white/35 sm:text-sm">
                 {new Date(tx.date).toLocaleDateString("fr-FR", {
                   day: "numeric",
                   month: "short",
@@ -55,7 +56,7 @@ export function DernieresTransactions({
 
             <p
               className={cn(
-                "text-base font-medium tabular-nums",
+                "shrink-0 text-sm font-medium tabular-nums sm:text-base",
                 tx.montant >= 0 ? "text-emerald-400" : "text-white/70"
               )}
             >

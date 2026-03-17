@@ -73,17 +73,17 @@ function CarteAlerte({ alerte }: { alerte: Alerte }) {
             : "border-white/[0.06]"
       )}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/[0.04] sm:h-11 sm:w-11">
+      <div className="flex items-start justify-between gap-2 sm:gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/[0.04] sm:h-11 sm:w-11">
             <IconeAlerte type={alerte.type} />
           </div>
-          <div>
-            <p className="text-sm font-medium tracking-wide text-white/45">
+          <div className="min-w-0">
+            <p className="text-xs font-medium tracking-wide text-white/45 sm:text-sm">
               {labelType(alerte.type)}
             </p>
             {alerte.marchand && (
-              <p className="text-base font-medium text-white/75">
+              <p className="truncate text-sm font-medium text-white/75 sm:text-base">
                 {alerte.marchand}
               </p>
             )}
@@ -92,7 +92,7 @@ function CarteAlerte({ alerte }: { alerte: Alerte }) {
         <BadgeSeverite severite={alerte.severite} />
       </div>
 
-      <p className="mt-4 text-base leading-relaxed text-white/60">
+      <p className="mt-3 text-sm leading-relaxed text-white/60 sm:mt-4 sm:text-base">
         {alerte.message}
       </p>
 
@@ -157,26 +157,26 @@ function AiInsights() {
       </div>
 
       {/* compteurs par severite */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-red-500/10 bg-red-500/[0.03] p-5 text-center sm:p-6">
-          <p className="text-3xl font-semibold text-red-400">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4">
+        <div className="rounded-xl border border-red-500/10 bg-red-500/[0.03] p-3 text-center sm:p-6">
+          <p className="text-2xl font-semibold text-red-400 sm:text-3xl">
             {critiques.length}
           </p>
-          <p className="mt-1 text-xs font-medium tracking-widest text-red-400/60 uppercase">
+          <p className="mt-1 text-[10px] font-medium tracking-widest text-red-400/60 uppercase sm:text-xs">
             Critiques
           </p>
         </div>
-        <div className="rounded-xl border border-amber-500/10 bg-amber-500/[0.03] p-5 text-center sm:p-6">
-          <p className="text-3xl font-semibold text-amber-400">
+        <div className="rounded-xl border border-amber-500/10 bg-amber-500/[0.03] p-3 text-center sm:p-6">
+          <p className="text-2xl font-semibold text-amber-400 sm:text-3xl">
             {attentions.length}
           </p>
-          <p className="mt-1 text-xs font-medium tracking-widest text-amber-400/60 uppercase">
+          <p className="mt-1 text-[10px] font-medium tracking-widest text-amber-400/60 uppercase sm:text-xs">
             Attention
           </p>
         </div>
-        <div className="rounded-xl border border-blue-500/10 bg-blue-500/[0.03] p-5 text-center sm:p-6">
-          <p className="text-3xl font-semibold text-blue-400">{infos.length}</p>
-          <p className="mt-1 text-xs font-medium tracking-widest text-blue-400/60 uppercase">
+        <div className="rounded-xl border border-blue-500/10 bg-blue-500/[0.03] p-3 text-center sm:p-6">
+          <p className="text-2xl font-semibold text-blue-400 sm:text-3xl">{infos.length}</p>
+          <p className="mt-1 text-[10px] font-medium tracking-widest text-blue-400/60 uppercase sm:text-xs">
             Info
           </p>
         </div>

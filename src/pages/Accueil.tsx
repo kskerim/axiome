@@ -5,6 +5,51 @@ import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff, BarChart3, Shield, Brain, Zap } from "lucide-react";
 
+// orbes animees en arriere-plan
+function FondAnime() {
+  return (
+    <div className="pointer-events-none fixed inset-0 overflow-hidden">
+      <div
+        className="absolute -left-20 -top-20 h-[280px] w-[280px] rounded-full opacity-20 blur-[80px] sm:-left-32 sm:-top-32 sm:h-[500px] sm:w-[500px] sm:blur-[120px]"
+        style={{
+          background: "radial-gradient(circle, #7c3aed 0%, transparent 70%)",
+          animation: "orbe-1 18s ease-in-out infinite",
+        }}
+      />
+      <div
+        className="absolute -bottom-24 -right-24 h-[320px] w-[320px] rounded-full opacity-15 blur-[90px] sm:-bottom-40 sm:-right-40 sm:h-[600px] sm:w-[600px] sm:blur-[140px]"
+        style={{
+          background: "radial-gradient(circle, #6366f1 0%, transparent 70%)",
+          animation: "orbe-2 22s ease-in-out infinite",
+        }}
+      />
+      <div
+        className="absolute left-1/2 top-1/3 hidden h-[350px] w-[350px] rounded-full opacity-10 blur-[100px] sm:block"
+        style={{
+          background: "radial-gradient(circle, #8b5cf6 0%, transparent 70%)",
+          animation: "orbe-3 15s ease-in-out infinite",
+        }}
+      />
+      <style>{`
+        @keyframes orbe-1 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(80px, 60px) scale(1.1); }
+          66% { transform: translate(-40px, 90px) scale(0.95); }
+        }
+        @keyframes orbe-2 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(-70px, -50px) scale(1.05); }
+          66% { transform: translate(50px, -80px) scale(0.9); }
+        }
+        @keyframes orbe-3 {
+          0%, 100% { transform: translate(-50%, 0) scale(1); }
+          50% { transform: translate(-50%, 40px) scale(1.15); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 // page d'accueil avec inscription, connexion et mode simulation
 export function Accueil() {
   const { inscription, connexion, activerSimulation } = useAuth();
@@ -32,7 +77,7 @@ export function Accueil() {
       setErreur(traduireErreur(resultat.erreur));
     } else if (mode === "inscription") {
       setMessageSucces(
-        "Compte créé avec succès. Vérifiez votre boîte mail pour confirmer votre adresse."
+        "Compte cree avec succes. Verifiez votre boite mail pour confirmer votre adresse."
       );
     }
 
@@ -40,14 +85,16 @@ export function Accueil() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#09090b]">
+    <div className="relative flex min-h-screen bg-[#09090b]">
+      <FondAnime />
+
       {/* colonne gauche : presentation */}
-      <div className="hidden lg:flex lg:w-1/2 flex-col justify-center px-16 xl:px-24">
+      <div className="relative hidden lg:flex lg:w-1/2 flex-col justify-center px-16 xl:px-24">
         <h1 className="text-5xl font-bold tracking-tight text-white/90 xl:text-6xl">
           <span className="tracking-[0.25em] uppercase">Axiome</span>
         </h1>
         <p className="mt-4 text-xl text-white/50 leading-relaxed max-w-lg">
-          Prenez le contrôle de vos finances personnelles avec des analyses intelligentes.
+          Prenez le controle de vos finances personnelles avec des analyses intelligentes.
         </p>
 
         {/* points forts */}
@@ -59,7 +106,7 @@ export function Accueil() {
             <div>
               <p className="font-medium text-white/80">Tableau de bord complet</p>
               <p className="text-sm text-white/40">
-                Solde, revenus, dépenses, budgets et projections en un coup d'oeil.
+                Solde, revenus, depenses et budgets en un coup d'oeil.
               </p>
             </div>
           </div>
@@ -71,7 +118,7 @@ export function Accueil() {
             <div>
               <p className="font-medium text-white/80">Analyses automatiques</p>
               <p className="text-sm text-white/40">
-                Détection d'anomalies, tendances et hausse d'abonnements.
+                Detection d'anomalies, tendances et hausse d'abonnements.
               </p>
             </div>
           </div>
@@ -81,9 +128,9 @@ export function Accueil() {
               <Shield size={20} className="text-amber-400" />
             </div>
             <div>
-              <p className="font-medium text-white/80">Données sécurisées</p>
+              <p className="font-medium text-white/80">Donnees securisees</p>
               <p className="text-sm text-white/40">
-                Mots de passe hachés, données isolées par utilisateur.
+                Mots de passe haches, donnees isolees par utilisateur.
               </p>
             </div>
           </div>
@@ -91,7 +138,7 @@ export function Accueil() {
       </div>
 
       {/* colonne droite : formulaire */}
-      <div className="flex w-full items-center justify-center px-6 lg:w-1/2 lg:px-16">
+      <div className="relative flex w-full items-center justify-center px-6 lg:w-1/2 lg:px-16">
         <div className="w-full max-w-md">
           {/* logo mobile */}
           <div className="mb-8 lg:hidden">
@@ -99,7 +146,7 @@ export function Accueil() {
               Axiome
             </h1>
             <p className="mt-2 text-base text-white/40">
-              Gérez vos finances en toute simplicité.
+              Gerez vos finances en toute simplicite.
             </p>
           </div>
 
@@ -113,7 +160,7 @@ export function Accueil() {
                 setMessageSucces(null);
               }}
               className={cn(
-                "rounded-lg py-2.5 text-sm font-semibold transition-all",
+                "rounded-lg py-2.5 text-sm font-semibold transition-colors",
                 mode === "connexion"
                   ? "bg-white/10 text-white shadow-sm"
                   : "text-white/40 hover:text-white/60"
@@ -129,7 +176,7 @@ export function Accueil() {
                 setMessageSucces(null);
               }}
               className={cn(
-                "rounded-lg py-2.5 text-sm font-semibold transition-all",
+                "rounded-lg py-2.5 text-sm font-semibold transition-colors",
                 mode === "inscription"
                   ? "bg-white/10 text-white shadow-sm"
                   : "text-white/40 hover:text-white/60"
@@ -161,7 +208,7 @@ export function Accueil() {
               <div className="relative">
                 <Input
                   type={motDePasseVisible ? "text" : "password"}
-                  placeholder={mode === "inscription" ? "minimum 6 caractères" : "votre mot de passe"}
+                  placeholder={mode === "inscription" ? "minimum 6 caracteres" : "votre mot de passe"}
                   value={motDePasse}
                   onChange={(e) => setMotDePasse(e.target.value)}
                   required
@@ -201,7 +248,7 @@ export function Accueil() {
                 ? "Chargement..."
                 : mode === "connexion"
                   ? "Se connecter"
-                  : "Créer mon compte"}
+                  : "Creer mon compte"}
             </Button>
           </form>
 
@@ -216,13 +263,13 @@ export function Accueil() {
           <button
             type="button"
             onClick={activerSimulation}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/[0.08] py-3.5 text-sm font-medium text-white/50 transition-all hover:border-white/15 hover:bg-white/[0.03] hover:text-white/70"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/[0.08] py-3.5 text-sm font-medium text-white/50 transition-colors hover:border-white/15 hover:bg-white/[0.03] hover:text-white/70"
           >
             <Zap size={16} />
             Essayer en mode simulation
           </button>
           <p className="mt-3 text-center text-xs text-white/25">
-            Testez l'interface avec des données fictives, sans créer de compte.
+            Testez l'interface avec des donnees fictives, sans creer de compte.
           </p>
         </div>
       </div>
@@ -236,16 +283,16 @@ function traduireErreur(message: string): string {
     return "Email ou mot de passe incorrect.";
   }
   if (message.includes("User already registered")) {
-    return "Un compte existe déjà avec cette adresse email.";
+    return "Un compte existe deja avec cette adresse email.";
   }
   if (message.includes("Password should be at least")) {
-    return "Le mot de passe doit contenir au moins 6 caractères.";
+    return "Le mot de passe doit contenir au moins 6 caracteres.";
   }
   if (message.includes("Unable to validate email")) {
     return "L'adresse email n'est pas valide.";
   }
   if (message.includes("Email rate limit exceeded")) {
-    return "Trop de tentatives. Réessayez dans quelques minutes.";
+    return "Trop de tentatives. Reessayez dans quelques minutes.";
   }
   return message;
 }

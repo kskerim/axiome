@@ -77,7 +77,7 @@ export function InfoBulle({ texte, className }: InfoBulleProps) {
         <div
           ref={bulleRef}
           className={cn(
-            "absolute left-1/2 z-50 w-64 rounded-lg border border-white/10 bg-[#151518] px-3.5 py-2.5 text-sm leading-relaxed text-white/70 shadow-xl",
+            "absolute left-1/2 z-50 w-52 rounded-lg border border-white/10 bg-[#151518] px-3 py-2 text-xs leading-relaxed text-white/70 shadow-xl sm:w-64 sm:px-3.5 sm:py-2.5 sm:text-sm",
             position === "haut" ? "bottom-full mb-2" : "top-full mt-2"
           )}
           style={{ transform: `translateX(calc(-50% + ${decalageX}px))` }}

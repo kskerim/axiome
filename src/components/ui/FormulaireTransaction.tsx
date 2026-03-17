@@ -1,4 +1,5 @@
-import { useForm, Controller } from "react-hook-form";
+import { memo } from "react";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
@@ -26,6 +27,12 @@ import {
   Gift,
   Check,
   Repeat,
+  Smartphone,
+  Wifi,
+  Zap,
+  Droplets,
+  Flame,
+  Shield,
 } from "lucide-react";
 import type { CategorieTransaction } from "@/types";
 import { useAxiomeStore } from "@/store";
@@ -42,20 +49,26 @@ const CATEGORIES_DEPENSES: {
   icon: React.ComponentType<{ size?: number }>;
 }[] = [
   { value: "alimentation", label: "Alimentation", icon: ShoppingBag },
+  { value: "restauration", label: "Restauration", icon: UtensilsCrossed },
+  { value: "bar_cafe", label: "Bar / Cafe", icon: Coffee },
   { value: "transport", label: "Transport", icon: Car },
   { value: "automobile", label: "Automobile", icon: Fuel },
-  { value: "logement", label: "Logement", icon: Home },
-  { value: "loisirs", label: "Loisirs", icon: Gamepad2 },
-  { value: "sante", label: "Santé", icon: HeartPulse },
-  { value: "restauration", label: "Restauration", icon: UtensilsCrossed },
-  { value: "bar_cafe", label: "Bar / Café", icon: Coffee },
+  { value: "loyer", label: "Loyer", icon: Home },
+  { value: "electricite", label: "Electricite", icon: Zap },
+  { value: "eau", label: "Eau", icon: Droplets },
+  { value: "gaz", label: "Gaz", icon: Flame },
+  { value: "forfait_tel", label: "Forfait tel", icon: Smartphone },
+  { value: "box_internet", label: "Box internet", icon: Wifi },
+  { value: "assurances", label: "Assurances", icon: Shield },
   { value: "abonnements", label: "Abonnements", icon: CreditCard },
   { value: "shopping", label: "Shopping", icon: ShoppingBag },
-  { value: "beaute", label: "Beauté", icon: Scissors },
+  { value: "loisirs", label: "Loisirs", icon: Gamepad2 },
+  { value: "sante", label: "Sante", icon: HeartPulse },
+  { value: "beaute", label: "Beaute", icon: Scissors },
   { value: "animaux", label: "Animaux", icon: PawPrint },
   { value: "maison", label: "Maison", icon: Wrench },
   { value: "cadeaux", label: "Cadeaux", icon: Gift },
-  { value: "education", label: "Éducation", icon: GraduationCap },
+  { value: "education", label: "Education", icon: GraduationCap },
   { value: "voyage", label: "Voyage", icon: Plane },
   { value: "divers", label: "Divers", icon: CircleDot },
 ];
@@ -67,13 +80,50 @@ const CATEGORIES_REVENUS: {
   icon: React.ComponentType<{ size?: number }>;
 }[] = [
   { value: "revenus", label: "Revenus", icon: Banknote },
-  { value: "epargne", label: "Épargne", icon: PiggyBank },
+  { value: "epargne", label: "Epargne", icon: PiggyBank },
 ];
+
+// grille de categories memoized (evite 22 re-renders inutiles a chaque frappe)
+const GrilleCategories = memo(function GrilleCategories({
+  categories,
+  valeur,
+  onChange,
+}: {
+  categories: typeof CATEGORIES_DEPENSES;
+  valeur: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div className="grid grid-cols-4 gap-1.5 sm:grid-cols-5">
+      {categories.map((cat) => {
+        const Icon = cat.icon;
+        return (
+          <button
+            key={cat.value}
+            type="button"
+            onClick={() => onChange(cat.value)}
+            className={
+              valeur === cat.value
+                ? "flex flex-col items-center gap-1 rounded-lg border border-violet-500/40 bg-violet-500/15 p-2 text-violet-300"
+                : "flex flex-col items-center gap-1 rounded-lg border border-white/[0.04] p-2 text-white/50 hover:border-white/10 hover:bg-white/[0.03] hover:text-white/70"
+            }
+          >
+            <Icon size={16} />
+            <span className="text-center text-[10px] font-medium leading-tight">{cat.label}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+});
 
 // schema de validation zod
 const schemaTransaction = z.object({
   estRevenu: z.boolean(),
-  marchand: z.string().min(1, "le nom est requis").max(50),
+  marchand: z
+    .string()
+    .transform((v) => v.trim().replace(/<[^>]*>/g, ""))
+    .pipe(z.string().min(1, "le nom est requis").max(50)),
   montant: z
     .number({ error: "montant invalide" })
     .positive("le montant doit etre positif")
@@ -90,7 +140,7 @@ interface FormulaireTransactionProps {
   onSucces?: () => void;
 }
 
-// formulaire de saisie d'une transaction facon bankin
+// formulaire de saisie d'une transaction
 export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) {
   const ajouterTransaction = useAxiomeStore((s) => s.ajouterTransaction);
 
@@ -98,7 +148,6 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
     register,
     handleSubmit,
     control,
-    watch,
     reset,
     setValue,
     formState: { errors, isSubmitting },
@@ -114,8 +163,8 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
     },
   });
 
-  const estRevenu = watch("estRevenu");
-  const estRecurrente = watch("estRecurrente");
+  const estRevenu = useWatch({ control, name: "estRevenu" });
+  const estRecurrente = useWatch({ control, name: "estRecurrente" });
   const categoriesDisponibles = estRevenu ? CATEGORIES_REVENUS : CATEGORIES_DEPENSES;
 
   // soumission du formulaire
@@ -133,7 +182,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
 
     const signe = data.estRevenu ? "+" : "-";
     toast.success(
-      `${data.estRevenu ? "Revenu" : "Dépense"} "${data.marchand}" (${signe}${data.montant.toFixed(2)} EUR)`
+      `${data.estRevenu ? "Revenu" : "Depense"} "${data.marchand}" (${signe}${data.montant.toFixed(2)} EUR)`
     );
 
     // verifie le depassement de budget pour les depenses
@@ -161,14 +210,14 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
                 setValue("estRecurrente", false);
               }}
               className={cn(
-                "flex items-center justify-center gap-2 rounded-lg py-3 text-sm font-semibold transition-all duration-200",
+                "flex items-center justify-center gap-2 rounded-lg py-3 text-sm font-semibold transition-colors",
                 !field.value
                   ? "bg-red-500/15 text-red-400 shadow-sm"
                   : "text-white/40 hover:text-white/60"
               )}
             >
               <ArrowDownCircle size={18} />
-              Dépense
+              Depense
             </button>
             <button
               type="button"
@@ -178,7 +227,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
                 setValue("estRecurrente", false);
               }}
               className={cn(
-                "flex items-center justify-center gap-2 rounded-lg py-3 text-sm font-semibold transition-all duration-200",
+                "flex items-center justify-center gap-2 rounded-lg py-3 text-sm font-semibold transition-colors",
                 field.value
                   ? "bg-emerald-500/15 text-emerald-400 shadow-sm"
                   : "text-white/40 hover:text-white/60"
@@ -191,7 +240,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
         )}
       />
 
-      {/* montant en gros (facon bankin) */}
+      {/* montant en gros */}
       <div className="space-y-2">
         <div className="relative">
           <Euro
@@ -246,35 +295,18 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
         )}
       </div>
 
-      {/* grille de categories */}
+      {/* grille de categories — composant memoized */}
       <div className="space-y-2">
-        <Label>Catégorie</Label>
+        <Label>Categorie</Label>
         <Controller
           name="categorie"
           control={control}
           render={({ field }) => (
-            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-              {categoriesDisponibles.map((cat) => {
-                const actif = field.value === cat.value;
-                const Icon = cat.icon;
-                return (
-                  <button
-                    key={cat.value}
-                    type="button"
-                    onClick={() => field.onChange(cat.value)}
-                    className={cn(
-                      "flex flex-col items-center gap-1.5 rounded-lg border border-white/[0.06] p-2.5 text-white/50 transition-all duration-200",
-                      actif
-                        ? "border-white/20 bg-white/[0.08] text-white ring-1 ring-white/10"
-                        : "hover:border-white/10 hover:bg-white/[0.03] hover:text-white/70"
-                    )}
-                  >
-                    <Icon size={18} />
-                    <span className="text-[11px] font-medium leading-tight">{cat.label}</span>
-                  </button>
-                );
-              })}
-            </div>
+            <GrilleCategories
+              categories={categoriesDisponibles}
+              valeur={field.value}
+              onChange={field.onChange}
+            />
           )}
         />
         {errors.categorie && (
@@ -292,7 +324,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
               type="button"
               onClick={() => field.onChange(!field.value)}
               className={cn(
-                "flex w-full items-center gap-3 rounded-xl border p-4 transition-all duration-200",
+                "flex w-full items-center gap-3 rounded-xl border p-4 transition-colors",
                 field.value
                   ? "border-indigo-500/30 bg-indigo-500/[0.06]"
                   : "border-white/[0.06] bg-transparent hover:border-white/10"
@@ -300,7 +332,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
             >
               <div
                 className={cn(
-                  "flex h-5 w-5 items-center justify-center rounded-md border transition-all",
+                  "flex h-5 w-5 items-center justify-center rounded-md border transition-colors",
                   field.value
                     ? "border-indigo-500 bg-indigo-500"
                     : "border-white/20 bg-transparent"
@@ -314,7 +346,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
                   "text-sm font-medium",
                   field.value ? "text-indigo-300" : "text-white/50"
                 )}>
-                  Dépense récurrente (mensuelle)
+                  Depense recurrente (mensuelle)
                 </span>
               </div>
             </button>
@@ -327,7 +359,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
         <div className="flex items-center gap-2 rounded-lg bg-indigo-500/[0.04] px-3 py-2">
           <Repeat size={14} className="text-indigo-400/70" />
           <p className="text-xs text-indigo-300/60">
-            sera déduite automatiquement chaque mois pour les prévisions
+            sera deduite automatiquement chaque mois pour les previsions
           </p>
         </div>
       )}
@@ -343,7 +375,7 @@ export function FormulaireTransaction({ onSucces }: FormulaireTransactionProps) 
             : "bg-white/90 text-black hover:bg-white/80"
         )}
       >
-        {estRevenu ? "Ajouter ce revenu" : "Ajouter cette dépense"}
+        {estRevenu ? "Ajouter ce revenu" : "Ajouter cette depense"}
       </Button>
     </form>
   );

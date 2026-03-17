@@ -8,14 +8,20 @@ import {
 } from "@/lib/transactions-db";
 
 // version du schema pour les migrations
-const STORE_VERSION = 2;
+const STORE_VERSION = 3;
 
 // budgets par defaut pour chaque categorie de depense
 const BUDGETS_DEFAUT: Record<string, number> = {
   alimentation: 400,
   transport: 150,
   automobile: 200,
-  logement: 900,
+  loyer: 900,
+  electricite: 80,
+  eau: 40,
+  gaz: 50,
+  forfait_tel: 30,
+  box_internet: 35,
+  assurances: 100,
   loisirs: 150,
   sante: 100,
   restauration: 200,
@@ -139,6 +145,26 @@ export const useAxiomeStore = create<AxiomeState>()(
         // v1 -> v2 : ajout des budgets par categorie
         if (version < 2) {
           state.budgets = BUDGETS_DEFAUT;
+        }
+        // v2 -> v3 : remplacement logement par loyer + nouvelles categories
+        if (version < 3) {
+          const b = (state.budgets ?? {}) as Record<string, number>;
+          if ("logement" in b) {
+            b.loyer = b.logement;
+            delete b.logement;
+          }
+          b.electricite ??= 80;
+          b.eau ??= 40;
+          b.gaz ??= 50;
+          b.forfait_tel ??= 30;
+          b.box_internet ??= 35;
+          b.assurances ??= 100;
+          state.budgets = b;
+          // migre aussi les transactions qui avaient "logement"
+          const txs = (state.transactions ?? []) as { categorie: string }[];
+          for (const tx of txs) {
+            if (tx.categorie === "logement") tx.categorie = "loyer";
+          }
         }
         return state as { transactions: Transaction[]; budgets: Record<string, number> };
       },

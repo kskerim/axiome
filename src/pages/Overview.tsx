@@ -4,7 +4,6 @@ import {
   calculerEvolutionMensuelle,
   calculerResteAVivre,
   calculerBudgetsCategorie,
-  calculerProjectionFinMois,
 } from "@/lib/calculs";
 import { KpiCard } from "@/components/ui/KpiCard";
 import { InfoBulle } from "@/components/ui/InfoBulle";
@@ -12,7 +11,6 @@ import { SoldeChart } from "@/components/ui/SoldeChart";
 import { DernieresTransactions } from "@/components/ui/DernieresTransactions";
 import { ResteAVivre } from "@/components/ui/ResteAVivre";
 import { JaugesCategories } from "@/components/ui/JaugesCategories";
-import { ProjectionFinMois } from "@/components/ui/ProjectionFinMois";
 
 // page principale avec kpi, graphique, budgets, projection et dernieres transactions
 function Overview() {
@@ -22,7 +20,6 @@ function Overview() {
   const evolution = calculerEvolutionMensuelle(transactions);
   const resteAVivre = calculerResteAVivre(transactions);
   const budgetsCategorie = calculerBudgetsCategorie(transactions, budgets);
-  const projection = calculerProjectionFinMois(transactions);
 
   return (
     <div className="space-y-6 sm:space-y-8">
@@ -64,9 +61,8 @@ function Overview() {
         <div className="lg:col-span-3">
           <SoldeChart donnees={evolution} />
         </div>
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2">
           <ResteAVivre donnees={resteAVivre} />
-          <ProjectionFinMois projection={projection} />
         </div>
       </div>
 

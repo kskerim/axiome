@@ -16,18 +16,31 @@ import {
   Wrench,
   Gift,
   BarChart3,
+  Zap,
+  Droplets,
+  Flame,
+  Smartphone,
+  Wifi,
+  Shield,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formaterMontant } from "@/lib/calculs";
 import type { BudgetCategorie } from "@/lib/calculs";
 import { InfoBulle } from "@/components/ui/InfoBulle";
+import { labelCategorie } from "@/lib/categories";
 
 // icone par categorie
 const ICONES: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
   alimentation: ShoppingBag,
   transport: Car,
   automobile: Fuel,
-  logement: Home,
+  loyer: Home,
+  electricite: Zap,
+  eau: Droplets,
+  gaz: Flame,
+  forfait_tel: Smartphone,
+  box_internet: Wifi,
+  assurances: Shield,
   loisirs: Gamepad2,
   sante: HeartPulse,
   restauration: UtensilsCrossed,
@@ -41,27 +54,6 @@ const ICONES: Record<string, React.ComponentType<{ size?: number; className?: st
   education: GraduationCap,
   voyage: Plane,
   divers: CircleDot,
-};
-
-// labels en francais
-const LABELS: Record<string, string> = {
-  alimentation: "Alimentation",
-  transport: "Transport",
-  automobile: "Automobile",
-  logement: "Logement",
-  loisirs: "Loisirs",
-  sante: "Santé",
-  restauration: "Restauration",
-  bar_cafe: "Bar / Café",
-  abonnements: "Abonnements",
-  shopping: "Shopping",
-  beaute: "Beauté",
-  animaux: "Animaux",
-  maison: "Maison",
-  cadeaux: "Cadeaux",
-  education: "Éducation",
-  voyage: "Voyage",
-  divers: "Divers",
 };
 
 // props du composant
@@ -119,7 +111,7 @@ export function JaugesCategories({ budgets }: JaugesCategoriesProps) {
       <div className="space-y-4">
         {budgetsActifs.map((b) => {
           const Icon = ICONES[b.categorie] ?? CircleDot;
-          const label = LABELS[b.categorie] ?? b.categorie;
+          const label = labelCategorie(b.categorie);
           const pct = Math.min(b.pourcentage, 100);
 
           return (
@@ -137,7 +129,7 @@ export function JaugesCategories({ budgets }: JaugesCategoriesProps) {
                     {label}
                   </span>
                 </div>
-                <div className="flex items-center gap-1.5 text-sm tabular-nums">
+                <div className="flex items-center gap-1 text-xs tabular-nums sm:gap-1.5 sm:text-sm">
                   <span className={couleurTexte(b.pourcentage)}>
                     {formaterMontant(b.depense)}
                   </span>
