@@ -25,7 +25,7 @@ export function ModalAjoutTransaction() {
         <span className="sm:hidden">Ajouter</span>
       </button>
 
-      <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto sm:max-w-xl sm:max-h-[90vh]">
+      <DialogContent className="max-w-md sm:max-w-xl">
         <DialogHeader>
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/10">
@@ -40,7 +40,7 @@ export function ModalAjoutTransaction() {
           </div>
         </DialogHeader>
 
-        <div className="mt-4 pb-2">
+        <div className="mt-4 pb-2 max-h-[calc(80vh-5rem)] overflow-y-auto overscroll-contain sm:max-h-[calc(90vh-5rem)]">
           <FormulaireTransaction onSucces={() => setOuvert(false)} />
         </div>
       </DialogContent>

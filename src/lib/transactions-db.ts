@@ -76,3 +76,17 @@ export async function supprimerTransactionDb(id: string): Promise<boolean> {
   }
   return true;
 }
+
+// supprime toutes les transactions d'un utilisateur en base
+export async function supprimerToutesTransactions(userId: string): Promise<boolean> {
+  const { error } = await supabase
+    .from("transactions")
+    .delete()
+    .eq("user_id", userId);
+
+  if (error) {
+    console.error("erreur suppression toutes transactions:", error.message);
+    return false;
+  }
+  return true;
+}

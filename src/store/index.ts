@@ -5,6 +5,7 @@ import {
   chargerTransactions,
   insererTransaction,
   supprimerTransactionDb,
+  supprimerToutesTransactions,
 } from "@/lib/transactions-db";
 
 // version du schema pour les migrations
@@ -113,13 +114,19 @@ export const useAxiomeStore = create<AxiomeState>()(
           budgets: { ...state.budgets, [categorie]: montant },
         })),
 
-      // reinitialise toutes les donnees a zero
-      reinitialiser: () =>
+      // reinitialise toutes les donnees a zero (local + supabase)
+      reinitialiser: () => {
+        const { userId } = get();
         set({
           transactions: [],
           budgets: BUDGETS_DEFAUT,
           filtreCategorie: "toutes",
-        }),
+        });
+        // supprime aussi en base si connecte
+        if (userId) {
+          supprimerToutesTransactions(userId);
+        }
+      },
 
       // definit l'id utilisateur pour activer la sync supabase
       setUserId: (id) => set({ userId: id }),
