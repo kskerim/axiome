@@ -25,7 +25,7 @@ export function ModalAjoutTransaction() {
         <span className="sm:hidden">Ajouter</span>
       </button>
 
-      <DialogContent className="max-w-md sm:max-w-xl">
+      <DialogContent className="max-w-lg sm:max-w-2xl">
         <DialogHeader>
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/10">

@@ -94,7 +94,7 @@ const GrilleCategories = memo(function GrilleCategories({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="grid grid-cols-4 gap-1.5 sm:grid-cols-5">
+    <div className="grid grid-cols-4 gap-2 sm:grid-cols-6">
       {categories.map((cat) => {
         const Icon = cat.icon;
         return (
@@ -104,12 +104,12 @@ const GrilleCategories = memo(function GrilleCategories({
             onClick={() => onChange(cat.value)}
             className={
               valeur === cat.value
-                ? "flex flex-col items-center gap-1 rounded-lg border border-violet-500/40 bg-violet-500/15 p-2 text-violet-300"
-                : "flex flex-col items-center gap-1 rounded-lg border border-white/[0.04] p-2 text-white/50 hover:border-white/10 hover:bg-white/[0.03] hover:text-white/70"
+                ? "flex flex-col items-center gap-1.5 rounded-lg border border-violet-500/40 bg-violet-500/15 p-2.5 text-violet-300"
+                : "flex flex-col items-center gap-1.5 rounded-lg border border-white/[0.04] p-2.5 text-white/50 hover:border-white/10 hover:bg-white/[0.03] hover:text-white/70"
             }
           >
-            <Icon size={16} />
-            <span className="text-center text-[10px] font-medium leading-tight">{cat.label}</span>
+            <Icon size={18} />
+            <span className="text-center text-[11px] font-medium leading-tight">{cat.label}</span>
           </button>
         );
       })}
