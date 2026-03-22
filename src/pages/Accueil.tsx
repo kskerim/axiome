@@ -5,45 +5,88 @@ import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff, BarChart3, Shield, Brain, Zap } from "lucide-react";
 
-// orbes animees en arriere-plan
+// fond anime avec grille, aurora et particules
 function FondAnime() {
   return (
     <div className="pointer-events-none fixed inset-0 overflow-hidden">
+      {/* grille de points subtile */}
       <div
-        className="absolute -left-20 -top-20 h-[280px] w-[280px] rounded-full opacity-20 blur-[80px] sm:-left-32 sm:-top-32 sm:h-[500px] sm:w-[500px] sm:blur-[120px]"
+        className="absolute inset-0 opacity-[0.03]"
         style={{
-          background: "radial-gradient(circle, #7c3aed 0%, transparent 70%)",
-          animation: "orbe-1 18s ease-in-out infinite",
+          backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
+          backgroundSize: "40px 40px",
+        }}
+      />
+
+      {/* nappes aurora avec gradient conique */}
+      <div
+        className="absolute -left-[20%] -top-[20%] h-[500px] w-[800px] rounded-full opacity-[0.12] blur-[120px] sm:h-[600px] sm:w-[900px]"
+        style={{
+          background: "conic-gradient(from 45deg, #7c3aed, #6366f1, #8b5cf6, transparent)",
+          animation: "nappe-1 20s ease-in-out infinite alternate",
         }}
       />
       <div
-        className="absolute -bottom-24 -right-24 h-[320px] w-[320px] rounded-full opacity-15 blur-[90px] sm:-bottom-40 sm:-right-40 sm:h-[600px] sm:w-[600px] sm:blur-[140px]"
+        className="absolute -bottom-[15%] -right-[15%] h-[400px] w-[700px] rounded-full opacity-[0.10] blur-[100px] sm:h-[500px] sm:w-[800px]"
         style={{
-          background: "radial-gradient(circle, #6366f1 0%, transparent 70%)",
-          animation: "orbe-2 22s ease-in-out infinite",
+          background: "conic-gradient(from 200deg, #6366f1, #a78bfa, #7c3aed, transparent)",
+          animation: "nappe-2 25s ease-in-out infinite alternate",
         }}
       />
       <div
-        className="absolute left-1/2 top-1/3 hidden h-[350px] w-[350px] rounded-full opacity-10 blur-[100px] sm:block"
+        className="absolute left-[40%] top-[20%] hidden h-[400px] w-[500px] rounded-full opacity-[0.06] blur-[100px] lg:block"
         style={{
-          background: "radial-gradient(circle, #8b5cf6 0%, transparent 70%)",
-          animation: "orbe-3 15s ease-in-out infinite",
+          background: "conic-gradient(from 120deg, #8b5cf6, transparent, #7c3aed, transparent)",
+          animation: "nappe-3 18s ease-in-out infinite alternate",
         }}
       />
+
+      {/* 128 particules montantes */}
+      {Array.from({ length: 128 }, (_, i) => (
+        <div
+          key={i}
+          className="absolute bottom-0 rounded-full"
+          style={{
+            left: `${(i * 7.13 + i * i * 0.37) % 100}%`,
+            width: `${1 + (i % 3)}px`,
+            height: `${1 + (i % 3)}px`,
+            background: `rgba(139, 92, 246, ${0.3 + (i % 5) * 0.1})`,
+            boxShadow: i % 4 === 0 ? "0 0 4px 1px rgba(139, 92, 246, 0.2)" : "none",
+            animation: `monter ${14 + (i % 12) * 3}s linear infinite`,
+            animationDelay: `${(i * 0.47) % 20}s`,
+          }}
+        />
+      ))}
+
       <style>{`
-        @keyframes orbe-1 {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(80px, 60px) scale(1.1); }
-          66% { transform: translate(-40px, 90px) scale(0.95); }
+        @keyframes nappe-1 {
+          0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+          50% { transform: translate(100px, 60px) rotate(15deg) scale(1.15); }
+          100% { transform: translate(-40px, 100px) rotate(-8deg) scale(1.05); }
         }
-        @keyframes orbe-2 {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(-70px, -50px) scale(1.05); }
-          66% { transform: translate(50px, -80px) scale(0.9); }
+        @keyframes nappe-2 {
+          0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+          50% { transform: translate(-80px, -50px) rotate(-12deg) scale(1.1); }
+          100% { transform: translate(60px, -30px) rotate(8deg) scale(0.95); }
         }
-        @keyframes orbe-3 {
-          0%, 100% { transform: translate(-50%, 0) scale(1); }
-          50% { transform: translate(-50%, 40px) scale(1.15); }
+        @keyframes nappe-3 {
+          0% { transform: translate(0, 0) scale(1); }
+          50% { transform: translate(50px, 30px) scale(1.1); }
+          100% { transform: translate(-30px, -20px) scale(1.05); }
+        }
+        @keyframes monter {
+          0% { transform: translateY(0) translateX(0); opacity: 0; }
+          5% { opacity: 0.8; }
+          80% { opacity: 0.5; }
+          100% { transform: translateY(-110vh) translateX(30px); opacity: 0; }
+        }
+        @keyframes brillance {
+          0%, 20% { background-position: 250% center; }
+          80%, 100% { background-position: -250% center; }
+        }
+        @keyframes ligne-pulse {
+          0% { opacity: 0.4; transform: scaleX(1); }
+          100% { opacity: 0.7; transform: scaleX(1.2); }
         }
       `}</style>
     </div>
@@ -90,9 +133,25 @@ export function Accueil() {
 
       {/* colonne gauche : presentation */}
       <div className="relative hidden lg:flex lg:w-1/2 flex-col justify-center px-16 xl:px-24">
-        <h1 className="text-5xl font-bold tracking-tight text-white/90 xl:text-6xl">
-          <span className="tracking-[0.25em] uppercase">Axiome</span>
+        <h1 className="text-5xl font-bold tracking-tight xl:text-6xl">
+          <span
+            className="bg-clip-text text-transparent tracking-[0.25em] uppercase"
+            style={{
+              backgroundImage: "linear-gradient(110deg, rgba(255,255,255,0.9) 35%, rgba(167,139,250,1) 50%, rgba(255,255,255,0.9) 65%)",
+              backgroundSize: "250% 100%",
+              animation: "brillance 8s ease-in-out infinite",
+            }}
+          >
+            Axiome
+          </span>
         </h1>
+        <div
+          className="mt-5 h-px w-20 origin-left rounded-full"
+          style={{
+            background: "linear-gradient(90deg, #7c3aed, #6366f1, transparent)",
+            animation: "ligne-pulse 3s ease-in-out infinite alternate",
+          }}
+        />
         <p className="mt-4 text-xl text-white/50 leading-relaxed max-w-lg">
           Prenez le controle de vos finances personnelles avec des analyses intelligentes.
         </p>
@@ -142,10 +201,23 @@ export function Accueil() {
         <div className="w-full max-w-md">
           {/* logo mobile */}
           <div className="mb-8 lg:hidden">
-            <h1 className="text-3xl font-bold tracking-[0.25em] text-white/90 uppercase">
-              Axiome
+            <h1 className="text-3xl font-bold">
+              <span
+                className="bg-clip-text text-transparent tracking-[0.25em] uppercase"
+                style={{
+                  backgroundImage: "linear-gradient(110deg, rgba(255,255,255,0.9) 35%, rgba(167,139,250,1) 50%, rgba(255,255,255,0.9) 65%)",
+                  backgroundSize: "250% 100%",
+                  animation: "brillance 8s ease-in-out infinite",
+                }}
+              >
+                Axiome
+              </span>
             </h1>
-            <p className="mt-2 text-base text-white/40">
+            <div
+              className="mt-3 h-px w-16 rounded-full opacity-50"
+              style={{ background: "linear-gradient(90deg, #7c3aed, #6366f1, transparent)" }}
+            />
+            <p className="mt-3 text-base text-white/40">
               Gerez vos finances en toute simplicite.
             </p>
           </div>
