@@ -28,6 +28,7 @@ function versTransaction(row: TransactionRow): Transaction {
 
 // charge toutes les transactions de l'utilisateur connecte
 export async function chargerTransactions(): Promise<Transaction[]> {
+  if (!supabase) return [];
   const { data, error } = await supabase
     .from("transactions")
     .select("*")
@@ -46,6 +47,7 @@ export async function insererTransaction(
   userId: string,
   transaction: Transaction
 ): Promise<boolean> {
+  if (!supabase) return false;
   const { error } = await supabase.from("transactions").insert({
     id: transaction.id,
     user_id: userId,
@@ -65,6 +67,7 @@ export async function insererTransaction(
 
 // supprime une transaction en base
 export async function supprimerTransactionDb(id: string): Promise<boolean> {
+  if (!supabase) return false;
   const { error } = await supabase
     .from("transactions")
     .delete()
@@ -79,6 +82,7 @@ export async function supprimerTransactionDb(id: string): Promise<boolean> {
 
 // supprime toutes les transactions d'un utilisateur en base
 export async function supprimerToutesTransactions(userId: string): Promise<boolean> {
+  if (!supabase) return false;
   const { error } = await supabase
     .from("transactions")
     .delete()

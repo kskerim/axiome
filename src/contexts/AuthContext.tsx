@@ -40,8 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // si supabase n'est pas configure, on passe directement a l'accueil
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    if (!supabaseUrl) {
+    if (!supabase) {
       setChargement(false);
       return;
     }
@@ -73,6 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // inscription avec email et mot de passe
   const inscription = async (email: string, motDePasse: string) => {
+    if (!supabase) return { erreur: "supabase non configure" };
     const { error } = await supabase.auth.signUp({ email, password: motDePasse });
     if (error) return { erreur: error.message };
     return { erreur: null };
@@ -80,6 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // connexion avec email et mot de passe
   const connexion = async (email: string, motDePasse: string) => {
+    if (!supabase) return { erreur: "supabase non configure" };
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password: motDePasse,
@@ -91,7 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // deconnexion
   const deconnexion = async () => {
     setModeSimulation(false);
-    await supabase.auth.signOut();
+    if (supabase) await supabase.auth.signOut();
   };
 
   // active le mode simulation (sans compte)
