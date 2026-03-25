@@ -41,8 +41,8 @@ function FondAnime() {
         }}
       />
 
-      {/* 128 particules montantes */}
-      {Array.from({ length: 128 }, (_, i) => (
+      {/* 512 particules montantes */}
+      {Array.from({ length: 512 }, (_, i) => (
         <div
           key={i}
           className="absolute bottom-0 rounded-full"
@@ -97,6 +97,8 @@ function FondAnime() {
 export function Accueil() {
   const { inscription, connexion, activerSimulation } = useAuth();
   const [mode, setMode] = useState<"connexion" | "inscription">("connexion");
+  const [prenom, setPrenom] = useState("");
+  const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
   const [erreur, setErreur] = useState<string | null>(null);
@@ -113,7 +115,7 @@ export function Accueil() {
 
     const resultat =
       mode === "inscription"
-        ? await inscription(email, motDePasse)
+        ? await inscription(email, motDePasse, prenom, nom)
         : await connexion(email, motDePasse);
 
     if (resultat.erreur) {
@@ -260,6 +262,35 @@ export function Accueil() {
 
           {/* formulaire */}
           <form onSubmit={handleSubmit} className="space-y-4">
+            {mode === "inscription" && (
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-white/60">
+                    Prenom
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder="Jean"
+                    value={prenom}
+                    onChange={(e) => setPrenom(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-white/60">
+                    Nom
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder="Dupont"
+                    value={nom}
+                    onChange={(e) => setNom(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+            )}
+
             <div className="space-y-2">
               <label className="text-sm font-medium text-white/60">
                 Adresse email

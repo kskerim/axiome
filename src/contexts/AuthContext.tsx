@@ -14,7 +14,7 @@ interface AuthContextType {
   session: Session | null;
   modeSimulation: boolean;
   chargement: boolean;
-  inscription: (email: string, motDePasse: string) => Promise<{ erreur: string | null }>;
+  inscription: (email: string, motDePasse: string, prenom: string, nom: string) => Promise<{ erreur: string | null }>;
   connexion: (email: string, motDePasse: string) => Promise<{ erreur: string | null }>;
   deconnexion: () => Promise<void>;
   activerSimulation: () => void;
@@ -70,10 +70,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  // inscription avec email et mot de passe
-  const inscription = async (email: string, motDePasse: string) => {
+  // inscription avec email, mot de passe, prenom et nom
+  const inscription = async (email: string, motDePasse: string, prenom: string, nom: string) => {
     if (!supabase) return { erreur: "supabase non configure" };
-    const { error } = await supabase.auth.signUp({ email, password: motDePasse });
+    const { error } = await supabase.auth.signUp({
+      email,
+      password: motDePasse,
+      options: { data: { prenom, nom } },
+    });
     if (error) return { erreur: error.message };
     return { erreur: null };
   };
